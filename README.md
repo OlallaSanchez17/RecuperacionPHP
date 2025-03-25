@@ -2,7 +2,7 @@
 
 ## Branch Principal
 
-**IMPORTANTE:** El branch `main` es donde el código funciona correctamente sin errores. Este branch está destinado a contener la versión estable del proyecto y no se trabaja directamente en él. <br> <br>
+:exclamation:**IMPORTANTE:** :exclamation: El branch `main` es donde el código funciona correctamente sin errores. Este branch está destinado a contener la versión estable del proyecto y no se trabaja directamente en él. <br> <br>
 Cada desarrollador debe crear y trabajar en su propia branch.
 
 ### Instrucciones para trabajar en el proyecto:
