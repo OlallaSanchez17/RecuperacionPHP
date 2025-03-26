@@ -7,6 +7,7 @@ Cada desarrollador debe crear y trabajar en su propia branch.
 
 ### Instrucciones para trabajar en el proyecto:
 
-1. **Crear una nueva rama:**
+1. **Crear un Fork:**
+
    <!-- ```bash --> 
    <!-- git checkout -b nombre-de-tu-rama -->
