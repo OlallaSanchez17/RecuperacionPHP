@@ -2,11 +2,8 @@
 
 ## Branch Principal
 
-:exclamation:**IMPORTANTE:** :exclamation: El branch `main` es donde el código funciona correctamente sin errores. Este branch está destinado a contener la versión estable del proyecto y no se trabaja directamente en él. <br> <br>
+:exclamation:**IMPORTANTE:** :exclamation: El branch `main` es donde el código funciona correctamente sin errores. <br> 
 
-### Instrucciones para trabajar en el proyecto:
-
-1. **Crear un Fork:**
 
 ## Tutorial Git / Github:
 
