@@ -1,0 +1,86 @@
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+#header {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    padding:  20px 20px 20px 20px;
+    border: 1px solid red;
+}
+
+#header img {
+    width: 50px;
+}
+
+#perfil {
+
+    height: 50px;
+    width: 50px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+input[type="search"]{
+    border: 1px solid black;
+    border-radius: 10%;
+}
+
+.perfil-usuario{
+    padding: 2px;
+    background-color:darkgray;
+    border-radius: 50%;
+}
+
+/* MENU DESPEGABLE! */
+
+
+
+/* Estilos del menú lateral */
+/* .sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #333;
+    transition: left 0.3s ease;
+} */
+
+/* Estilos de la lista */
+
+/* Checkbox oculto */
+
+#menu-user{
+    display: flex;
+    text-align: center;
+}
+
+#menu-toggle {
+    display: none;
+}
+
+/* Botón de menú */
+.menu-btn {
+    /* position: fixed; */
+    /* left: 10px; */
+    /* top: 10px; */
+    /* background: #333; */
+    color: black;    
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    text-align: center;
+    font-size: large;
+    /* border-radius: 5px; */
+}
+
+/* Mostrar menú cuando se activa el checkbox */
+#menu-toggle:checked ~ .sidebar {
+    left: 0;
+}
