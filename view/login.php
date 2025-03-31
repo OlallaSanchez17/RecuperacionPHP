@@ -8,6 +8,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <img id="logo" src="images/logo-1.png" > -->
+    <link rel="icon" href=".../imgs/logocoches.png">
     <title>Formulario de Inicio de Sesión</title>
 
 </head>
