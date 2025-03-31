@@ -14,14 +14,14 @@
 
 <body>
     <h2>Inicio de Sesión</h2>
-    <form action="validar_login.php" method="POST">
+    <form action=".../controller/usercontroller.php" method="POST">
         <label>Usuario:</label>
         <input type="text" name="usuario" required>
         <br>
         <label>Contraseña:</label>
         <input type="password" name="clave" required>
         <br>
-        <input type="submit" value="Ingresar">
+        <button type="submit" name="login">Login</button>
     </form>
 </body>
 
