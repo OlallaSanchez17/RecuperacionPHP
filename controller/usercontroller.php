@@ -32,6 +32,8 @@ class usercontroller
 
     public function login(): void
     {
+        echo "<p>Login button is clicked and called.</p>";
+        
 
     }
 
