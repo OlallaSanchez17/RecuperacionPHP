@@ -1,16 +1,21 @@
+<?php
+?>
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regístrate</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="registre.css">
 </head>
+
 <body>
 
     <div class="contenedor">
-        <h2>Regístrate</h2>
-        <form action="registro.php" method="post">
+        <h2>Registro</h2>
+        <form action="../../controller/usercontroller.php" method="post">
             <label for="nombre">Usuario</label>
             <input type="text" id="nombre" name="nombre" required>
 
@@ -22,10 +27,13 @@
 
             <label for="correo">Correo electrónico</label>
             <input type="email" id="correo" name="correo" required placeholder="@">
+            <!-- <button type="submit" name="register">Registre</button> -->
 
-            <input id="submit" type="submit" name="submit" value="Enviar" >
+
+            <input id="submit" type="submit" name="register" value="Registrarse" >
         </form>
     </div>
 
 </body>
+
 </html>
