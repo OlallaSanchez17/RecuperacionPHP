@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regístrate</title>
-    <link rel="stylesheet" href="registre.css">
+    <link rel="stylesheet" href="register.css">
 </head>
 
 <body>

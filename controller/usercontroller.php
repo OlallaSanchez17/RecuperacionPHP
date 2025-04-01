@@ -35,19 +35,41 @@ class usercontroller
 
         // Verificar conexión
         if ($conn->connect_error) {
+
             die("Connection failed: " . $conn->connect_error);
         } else {
-            // $sql = "CREATE DATABASE myDB";
-            // if ($conn->query($sql) === TRUE) {
-            //     echo "Database created successfully";
-            // } else {
-            //     echo "Error creating database: " . $conn->error;
-            // }
 
             echo "Connected successfully";
-        }
-        $conn->close();
 
+        }
+
+        $sqldb = "CREATE DATABASE IF NOT EXISTS spmotors";
+
+        if ($conn->query($sqldb) === TRUE) {
+
+            echo "Database created successfully";
+
+        } else {
+
+            echo "Error creating database: " . $conn->error;
+            
+        }
+
+        $sqltb = "CREATE TABLE IF NOT EXISTS usuarios (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            firstname VARCHAR(30) NOT NULL,
+            lastname VARCHAR(30) NOT NULL,
+            email VARCHAR(50),
+            password INT
+        )";
+
+        if ($conn->query($sqltb) === TRUE) {
+            echo "Table MyGuests created successfully";
+        } else {
+            echo "Error creating table: " . $conn->error;
+        }
+
+        $conn->close();
     }
 
 
@@ -61,7 +83,7 @@ class usercontroller
         $conn = $this->connectToDatabase();
         echo "<p>Login button is clicked and called.</p>";
 
-        
+
 
 
 
@@ -72,7 +94,7 @@ class usercontroller
         $conn = $this->connectToDatabase();
         echo "<p>Logout button is clicked and called.</p>";
 
-        
+
 
     }
 
@@ -82,7 +104,7 @@ class usercontroller
         echo "<p>Register button is clicked and called.</p>";
 
 
-        
+
 
     }
 
