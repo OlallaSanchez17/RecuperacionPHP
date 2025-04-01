@@ -7,16 +7,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST["login"])) {
         echo "<p>Login button is clicked.</p>";
-        // $user->login();
+        $user->login();
     }
-    // if (isset($_POST["logout"])) {
-    //     echo "<p>Logout button is clicked.</p>";
-    //     $user->logout();
-    // }
-    // if (isset($_POST["register"])) {
-    //     echo "<p>Register button is clicked.</p>";
-    //     $user->register();
-    // }
+    if (isset($_POST["logout"])) {
+        echo "<p>Logout button is clicked.</p>";
+        $user->logout();
+    }
+    if (isset($_POST["register"])) {
+        echo "<p>Register button is clicked.</p>";
+        $user->register();
+    }
 
 }
 

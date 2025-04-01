@@ -16,7 +16,7 @@
 
 <body>
     <h2>Inicio de Sesión</h2>
-    <form action=".../controller/usercontroller.php" method="POST">
+    <form action="../controller/usercontroller.php" method="POST">
         <label>Usuario:</label>
         <input type="text" name="usuario" required>
         <br>

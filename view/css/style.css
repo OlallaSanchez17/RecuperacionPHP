@@ -4,6 +4,8 @@
     border: 0;
 }
 
+/*ESTILOS HEADER */
+
 #header {
     display: flex;
     justify-content:space-between;
@@ -13,7 +15,7 @@
 }
 
 #header img {
-    width: 50px;
+    width: 40px;
 }
 
 #perfil {
