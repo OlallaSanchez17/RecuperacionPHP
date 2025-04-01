@@ -6,7 +6,7 @@
 
 /*ESTILOS HEADER */
 
-#header {
+header {
     display: flex;
     justify-content:space-between;
     align-items: center;
@@ -14,8 +14,12 @@
     border: 1px solid red;
 }
 
-#header img {
+header img {
     width: 40px;
+}
+
+#page-logo {
+    width: 220px;
 }
 
 #perfil {
