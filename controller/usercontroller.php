@@ -17,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p>Register button is clicked.</p>";
         $user->register();
     }
-
 }
 
 class usercontroller
@@ -29,6 +28,7 @@ class usercontroller
         $username = "root";
         $password = "1234";
         $dbname = "spmotors"; // Asegúrate de cambiar esto al nombre de tu base de datos
+        $tbname = "users";
 
         // Crear conexión
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -40,22 +40,19 @@ class usercontroller
         } else {
 
             echo "Connected successfully";
-
         }
 
-        $sqldb = "CREATE DATABASE IF NOT EXISTS spmotors";
+        $sqldb = "CREATE DATABASE IF NOT EXISTS $dbname";
 
         if ($conn->query($sqldb) === TRUE) {
 
             echo "Database created successfully";
-
         } else {
 
             echo "Error creating database: " . $conn->error;
-            
         }
 
-        $sqltb = "CREATE TABLE IF NOT EXISTS usuarios (
+        $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             firstname VARCHAR(30) NOT NULL,
             lastname VARCHAR(30) NOT NULL,
@@ -73,43 +70,25 @@ class usercontroller
     }
 
 
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function login(): void
     {
         $conn = $this->connectToDatabase();
         echo "<p>Login button is clicked and called.</p>";
-
-
-
-
-
     }
 
     public function logout(): void
     {
         $conn = $this->connectToDatabase();
         echo "<p>Logout button is clicked and called.</p>";
-
-
-
     }
 
     public function register(): void
     {
-        $conn = $this->connectToDatabase();
+        $conn = $this->connectToDatabase();        
         echo "<p>Register button is clicked and called.</p>";
-
-
-
-
     }
-
-
-
 }
 
 // $host = "localhost";
@@ -154,5 +133,3 @@ class usercontroller
 //     $stmt_check->close();
 // }
 // $conn->close();
-
-?>
