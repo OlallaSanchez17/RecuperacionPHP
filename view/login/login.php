@@ -9,7 +9,7 @@
 <body>
 
     <div class="contenedor">
-        <h2>Regístrate</h2>
+        <h2>Inciar Sesión</h2>
         <form action="../../controller/usercontroller.php" method="post">                    
 
             <label for="correo">Correo electrónico</label>
