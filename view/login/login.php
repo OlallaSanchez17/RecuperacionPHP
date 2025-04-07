@@ -1,27 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Regístrate</title>
-    <link rel="stylesheet" href="login.css">
-</head>
-<body>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    
+    $correo = $_POST['correo'];
+    $contraseña = $_POST['contraseña'];
 
-    <div class="contenedor">
-        <h2>Inciar Sesión</h2>
-        <form action="../../controller/usercontroller.php" method="post">                    
-
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" required placeholder="@">
-
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+   
+    $usuario_valido = "usuario@ejemplo.com";
+    $clave_valida = "123456";
 
 
-            <input id="submit" type="submit" name="login" value="Enviar" >
-        </form>
-    </div>
+    if ($correo === $usuario_valido && $contraseña === $clave_valida) {
+  
+        session_start();
+        $_SESSION['usuario'] = $correo;
+        echo "Inicio de sesión exitoso. ¡Bienvenido, $correo!";
+    
+    } else {
+        echo "Correo o contraseña incorrectos.";
+    }
 
-</body>
-</html>
+} else {
+    echo "Acceso no autorizado.";
+}
+?>
