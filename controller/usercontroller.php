@@ -21,6 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 class usercontroller
 {
+    private $conn;
+    public function __construct() {}
 
     private function connectToDatabase()
     {
@@ -29,6 +31,7 @@ class usercontroller
         $password = "1234";
         $dbname = "spmotors"; // Asegúrate de cambiar esto al nombre de tu base de datos
         $tbname = "users";
+        $this->conn;
 
         // Crear conexión
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -70,13 +73,39 @@ class usercontroller
     }
 
 
-    public function __construct() {}
 
     public function login(): void
     {
-        $conn = $this->connectToDatabase();
-        echo "<p>Login button is clicked and called.</p>";
+        $this->connectToDatabase();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $correo = trim($_POST["email"]);
+            $contraseña = $_POST["password"];
+
+            $sql_check = "SELECT * FROM users WHERE correo = ?";
+            $stmt_check = $this->conn->prepare($sql_check);
+            $stmt_check->bind_param("s", $correo);
+            $stmt_check->execute();
+            $resultado = $stmt_check->get_result();
+
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (password_verify($contraseña, $row['password'])) {
+                    echo "Login exitoso. Bienvenido, " . $row['firstname'] . "!";
+                    // Aquí puedes iniciar la sesión del usuario, por ejemplo:
+                    // session_start();
+                    // $_SESSION['user_id'] = $row['id'];
+                } else {
+                    echo "Contraseña incorrecta.";
+                }
+            } else {
+                echo "Correo no registrado.";
+            }
+
+            $stmt_check->close();
+        }
     }
+
 
     public function logout(): void
     {
@@ -100,50 +129,7 @@ class usercontroller
 
     public function register(): void
     {
-        $conn = $this->connectToDatabase();        
+        $conn = $this->connectToDatabase();
         echo "<p>Register button is clicked and called.</p>";
     }
 }
-
-// $host = "localhost";
-// $usuario = "root"; 
-// $password = "";  
-// $base_de_datos = "registro_usuarios"; 
-
-// $conn = new mysqli($host, $usuario, $password, $base_de_datos);
-
-// if ($conn->connect_error) {
-//     die("Error de conexión: " . $conn->connect_error);
-// }
-
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     $nombre = trim($_POST["nombre"]);
-//     $apellidos = trim($_POST["apellidos"]);
-//     $contraseña = password_hash($_POST["contraseña"], PASSWORD_BCRYPT); 
-//     $correo = trim($_POST["correo"]);
-
-//     $sql_check = "SELECT * FROM usuarios WHERE correo = ?";
-//     $stmt_check = $conn->prepare($sql_check);
-//     $stmt_check->bind_param("s", $correo);
-//     $stmt_check->execute();
-//     $resultado = $stmt_check->get_result();
-
-//     if ($resultado->num_rows > 0) {
-//         echo "Este correo ya está registrado.";
-//     } else {
-
-//         $sql = "INSERT INTO usuarios (nombre, apellidos, contraseña, correo) VALUES (?, ?, ?, ?)";
-//         $stmt = $conn->prepare($sql);
-//         $stmt->bind_param("ssss", $nombre, $apellidos, $contraseña, $correo);
-
-//         if ($stmt->execute()) {
-//             echo "Registro exitoso. <a href='login.html'>Inicia sesión</a>";
-//         } else {
-//             echo "Error al registrar: " . $stmt->error;
-//         }
-
-//         $stmt->close();
-//     }
-//     $stmt_check->close();
-// }
-// $conn->close();
