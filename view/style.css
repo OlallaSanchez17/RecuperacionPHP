@@ -4,13 +4,67 @@
     border: 0;
 }
 
-/*ESTILOS HEADER */
+
+/* VARIABLES */
+:root {}
+
+
+/* PANTALLA MOVIL */
+@media only screen and (max-width: 600px) {
+
+
+    #header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px;
+        text-align: center;
+        border: 1px solid red;
+    
+    }
+
+    #header .img{
+        width: 10%;
+    }
+/* 
+    #header a{
+        background-image:url(imgs/perfil-usuario.png);
+    }
+
+    #header .img {
+        width: 10%;
+
+    } */
+
+    body {
+        background-color: lightblue;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ESTILOS HEADER
 
 header {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
-    padding:  20px 20px 20px 20px;
+    padding: 20px 20px 20px 20px;
     border: 1px solid red;
 }
 
@@ -30,16 +84,16 @@ header img {
     border-radius: 50%;
 }
 
-input[type="search"]{
+input[type="search"] {
     border: 1px solid black;
     border-radius: 10%;
 }
 
-.perfil-usuario{
+.perfil-usuario {
     padding: 2px;
-    background-color:darkgray;
+    background-color: darkgray;
     border-radius: 50%;
-}
+} */
 
 /* MENU DESPEGABLE! */
 
@@ -60,7 +114,7 @@ input[type="search"]{
 
 /* Checkbox oculto */
 
-#menu-user{
+#menu-user {
     display: flex;
     text-align: center;
 }
@@ -75,7 +129,7 @@ input[type="search"]{
     /* left: 10px; */
     /* top: 10px; */
     /* background: #333; */
-    color: black;    
+    color: black;
     cursor: pointer;
     margin: 0;
     padding: 0;
@@ -87,6 +141,6 @@ input[type="search"]{
 }
 
 /* Mostrar menú cuando se activa el checkbox */
-#menu-toggle:checked ~ .sidebar {
+#menu-toggle:checked~.sidebar {
     left: 0;
 }

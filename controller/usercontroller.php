@@ -22,100 +22,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 class usercontroller
 {
     private $conn;
-    public function __construct() {}
-
-    private function connectToDatabase()
+    public function __construct()
     {
         $servername = "localhost";
         $username = "root";
         $password = "1234";
-        $dbname = "spmotors"; // Asegúrate de cambiar esto al nombre de tu base de datos
+        $dbname = "spmotors";
         $tbname = "users";
-        $this->conn;
 
-        // Crear conexión
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
 
-        // Verificar conexión
-        if ($conn->connect_error) {
-
-            die("Connection failed: " . $conn->connect_error);
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
         } else {
-
             echo "Connected successfully";
+
+            $sqldb = "CREATE DATABASE IF NOT EXISTS $dbname";
+
+            if ($this->conn->query($sqldb) === TRUE) {
+
+                echo "Database created successfully";
+            } else {
+
+                echo "Error creating database: " . $this->conn->error;
+            }
+
+            $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
+                    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    firstname VARCHAR(30) NOT NULL,
+                    lastname VARCHAR(30) NOT NULL,
+                    email VARCHAR(50),
+                    password INT
+                )";
+
+            if ($this->conn->query($sqltb) === TRUE) {
+                echo "Table MyGuests created successfully";
+            } else {
+                echo "Error creating table: " . $this->conn->error;
+            }
         }
-
-        $sqldb = "CREATE DATABASE IF NOT EXISTS $dbname";
-
-        if ($conn->query($sqldb) === TRUE) {
-
-            echo "Database created successfully";
-        } else {
-
-            echo "Error creating database: " . $conn->error;
-        }
-
-        $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            firstname VARCHAR(30) NOT NULL,
-            lastname VARCHAR(30) NOT NULL,
-            email VARCHAR(50),
-            password INT
-        )";
-
-        if ($conn->query($sqltb) === TRUE) {
-            echo "Table MyGuests created successfully";
-        } else {
-            echo "Error creating table: " . $conn->error;
-        }
-
-        $conn->close();
     }
-
 
 
     public function login(): void
     {
-        $this->connectToDatabase();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $correo = trim($_POST["email"]);
-            $contraseña = $_POST["password"];
+        $email = $_POST["email"];
+        $password = $_POST["password"];
 
-            $sql_check = "SELECT * FROM users WHERE correo = ?";
-            $stmt_check = $this->conn->prepare($sql_check);
-            $stmt_check->bind_param("s", $correo);
-            $stmt_check->execute();
-            $resultado = $stmt_check->get_result();
+        $stmt = $this->conn->prepare(query: "SELECT email, password FROM users WHERE email=? AND password=?");
 
-            if ($resultado->num_rows > 0) {
-                $row = $resultado->fetch_assoc();
-                if (password_verify($contraseña, $row['password'])) {
-                    echo "Login exitoso. Bienvenido, " . $row['firstname'] . "!";
-                    // Aquí puedes iniciar la sesión del usuario, por ejemplo:
-                    // session_start();
-                    // $_SESSION['user_id'] = $row['id'];
-                } else {
-                    echo "Contraseña incorrecta.";
-                }
-            } else {
-                echo "Correo no registrado.";
-            }
+        $stmt->bind_param("ss",  $email,  $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            $stmt_check->close();
+        if ($row = $result->fetch_assoc()) {
+            $_SESSION["login"] = true;
+            $_SESSION["email"] = $row["email"];
+            $_SESSION["password"] = $row["password"];
+
+            $this->conn->close();
+
+            header(header: "Location: ../view/profile.php");
+            exit();
+        } else {
+            $_SESSION["login"] = false;
+            echo "No logged";
         }
     }
 
-
     public function logout(): void
     {
-        $conn = $this->connectToDatabase();
         echo "<p>Logout button is clicked and called.</p>";
     }
 
     public function register(): void
     {
-        $conn = $this->connectToDatabase();
         echo "<p>Register button is clicked and called.</p>";
     }
 }
