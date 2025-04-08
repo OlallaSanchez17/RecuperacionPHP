@@ -39,5 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $stmt_check->close();
 }
+}
 $conn->close();
+
 ?>
