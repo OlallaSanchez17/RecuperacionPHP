@@ -20,3 +20,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 } else {
     echo "Acceso no autorizado.";
 }
+?>
