@@ -13,20 +13,18 @@
             <img src="../imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
         </div>
 
-        <h2>Regístrate</h2>
-        <form action="../login/login.php" method="post">
-            <label for="nombre">Usuario</label>
-            <input type="text" id="nombre" name="nombre" required>
+        <h2>login</h2>
+        <form action="../../controller/usercontroller.php" method="post">
 
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
 
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" required placeholder="@">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required placeholder="@">
 
             <input id="submit" type="submit" name="submit" value="Enviar" >
 
-            ¿Ya tienes una cuenta? <a href="registro/registro.html">Iniciar Sesion</a>            
+            ¿no tienes una cuenta? <a href="registro/registro.html">Regístrate</a>            
         </form>
 
     </div>
