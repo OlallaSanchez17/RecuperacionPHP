@@ -23,6 +23,13 @@ form {
     margin-top: 10px;
 }
 
+label,
+input,
+#submit {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 label {
     display: block;
     margin-top: 15px;
@@ -31,7 +38,6 @@ label {
 }
 
 input {
-    width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 2px solid #FFBB06;
@@ -42,7 +48,6 @@ input {
 }
 
 #submit {
-    width: 100%;
     background-color: #FFBB06;
     color: #000000;
     padding: 10px;
@@ -71,4 +76,9 @@ input {
 .volver:hover {
     background-color: #FFBB06;
     color: #000000;
+}
+
+.logo-container img {
+    max-width: 250px;
+    border-radius: 10px;
 }
