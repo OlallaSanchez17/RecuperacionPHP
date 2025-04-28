@@ -1,0 +1,81 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fffcfc;
+    color: #000;
+    margin: 0;
+}
+
+.w3-sidebar {
+    background-color: #403f3f;
+    border-right: 2px solid #FFBB06;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    height: 100vh;
+    padding-top: 20px;
+}
+
+.w3-sidebar .w3-button {
+    display: block;
+    width: 100%;
+    color: #FFBB06;
+    font-weight: bold;
+    text-align: left;
+    padding: 15px 20px;
+    border-bottom: 1px solid #FFBB06;
+    background: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.w3-sidebar .w3-button:hover {
+    background-color: #FFBB06;
+    color: #403f3f;
+}
+
+.w3-hide-large {
+    background-color: #FFBB06;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.w3-teal {
+    background-color: #403f3f !important;
+    border-bottom: 2px solid #FFBB06;
+}
+
+.w3-teal .w3-button {
+    background-color: #FFBB06 !important;
+    color: #000;
+    font-weight: bold;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.w3-teal .w3-button:hover {
+    background-color: #e0a800 !important;
+}
+
+.w3-main {
+    margin-left: 200px;
+    padding: 20px;
+    background-color: #e0dede;
+    min-height: 100vh;
+}
+
+.w3-container h1 {
+    color: #FFBB06;
+    margin: 0;
+    font-size: 2em;
+}
+
+a {
+    text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+    .w3-main {
+        margin-left: 0;
+        margin-top: 50px;
+    }
+}

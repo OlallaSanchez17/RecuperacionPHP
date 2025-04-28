@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regístrate</title>
+  <link rel="stylesheet" href="../menu desplegable/menu.css">
+</head>
+<body>
+  <nav class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px;" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">✖ Cerrar</button>
+    <a href="#" class="w3-bar-item w3-button">Calendario de eventos<br></a>
+    <a href="#" class="w3-bar-item w3-button">Coches en venta<br></a>
+    <a href="#" class="w3-bar-item w3-button">Comunidad<br></a>
+    <a href="#" class="w3-bar-item w3-button">Sobre nosotros<br></a>
+  </nav>
+
+  <div class="w3-main" style="margin-left:200px">
+
+    <header class="w3-teal">
+      <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">☰</button>
+      <div class="w3-container">
+        <h1><img src="../view/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 150px; margin-left: 840pt; margin-top: -15px;"></h1>
+      </div>
+    </header>
+
+    <section class="w3-container">
+      <p></p>
+    </section>
+
+  </div>
+
+  <script>
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
