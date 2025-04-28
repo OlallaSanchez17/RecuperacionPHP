@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regístrate</title>
     <link rel="stylesheet" href="../login/login.css">
 </head>
+
 <body>
 
     <div class="contenedor">
@@ -14,20 +16,21 @@
         </div>
 
         <h2>login</h2>
-        <form action="../../controller/usercontroller.php" method="post">
-
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required>
+        <form action="../controller/usercontroller.php" method="post">
 
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required placeholder="@">
 
-            <input id="submit" type="submit" name="submit" value="Enviar" >
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
 
-            ¿no tienes una cuenta? <a href="registro/registro.html">Regístrate</a>            
+            <input id="submit" type="submit" name="submit" value="Enviar">
+
+            ¿no tienes una cuenta? <a href="registro/registro.html">Regístrate</a>
         </form>
 
     </div>
 
 </body>
+
 </html>
