@@ -67,7 +67,9 @@ class usercontroller
             $stmt->bind_param("ss", $email, $hashedPassword);
     
             if ($stmt->execute()) {
-                echo "Usuario registrado correctamente.";
+                // Registro exitoso, ahora redireccionar a login
+                header("Location: ../../");
+                exit();
             } else {
                 echo "Error al registrar usuario: " . $stmt->error;
             }
@@ -76,22 +78,23 @@ class usercontroller
         }
     }
     
+    
 
     public function login(): void
     {
         $email = $_POST["email"] ?? '';
         $password = $_POST["password"] ?? '';
-
+        
         $stmt = $this->conn->prepare("SELECT email, password FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-
+    
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row["password"])) {
                 $_SESSION["login"] = true;
                 $_SESSION["email"] = $row["email"];
-                header("Location: ../../");
+                header("Location: ../view/index/index.html");
                 exit();
             } else {
                 echo "Contraseña incorrecta.";
@@ -100,7 +103,7 @@ class usercontroller
             echo "Usuario no encontrado.";
         }
     }
-
+    
     public function logout(): void
     {
         session_unset();
