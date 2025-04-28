@@ -68,7 +68,9 @@ class usercontroller
     
             if ($stmt->execute()) {
                 // Registro exitoso, ahora redireccionar a login
-                header("Location: ../../");
+                $url = "http://localhost/DAW1-ProyectoTransversal/view/index/index.html";
+                header("Location: " . $url);
+            
                 exit();
             } else {
                 echo "Error al registrar usuario: " . $stmt->error;
@@ -94,7 +96,9 @@ class usercontroller
             if (password_verify($password, $row["password"])) {
                 $_SESSION["login"] = true;
                 $_SESSION["email"] = $row["email"];
-                header("Location: ../view/index/index.html");
+                $url = "http://localhost/DAW1-ProyectoTransversal/view/index/index.html";
+                header("Location: " . $url);
+                // header("Location: ../view/index/index.html");
                 exit();
             } else {
                 echo "Contraseña incorrecta.";
