@@ -99,9 +99,8 @@ class usercontroller
             if (password_verify($password, $row["password"])) {
                 $_SESSION["login"] = true;
                 $_SESSION["email"] = $row["email"];
-                $url = "http://localhost/DAW1-ProyectoTransversal/view/index/index.html";
+                $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
                 header("Location: " . $url);
-                // header("Location: ../view/index/index.html");
                 exit();
             } else {
                 echo "Contraseña incorrecta.";
