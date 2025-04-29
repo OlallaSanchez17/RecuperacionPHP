@@ -17,17 +17,19 @@
 
         <h2>login</h2>
         <form action="../controller/usercontroller.php" method="post">
-            <label for="email">Correo electrónico</label>
 
+            <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required placeholder="@">
 
-            <label for="password">Contraseña</label>
+            <label for="password">Contraseña</label>        
             <input type="password" id="password" name="password" required>
-
 
             <input id="submit" type="submit" name="login" value="Enviar">
 
-            ¿no tienes una cuenta? <a href="../view/registro/registro.html">Regístrate</a>
+            <p>
+                ¿no tienes una cuenta? <a href="../view/registro/registro.html">Regístrate</a>
+            </p>
+            
         </form>
 
     </div>
