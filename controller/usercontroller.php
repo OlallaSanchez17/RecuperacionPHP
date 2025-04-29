@@ -23,7 +23,7 @@ class usercontroller
     {
         $servername = "localhost";
         $username = "root";
-        $password = "";
+        $password = "1234";
         $dbname = "spmotors";
         $tbname = "users";
 
@@ -57,20 +57,23 @@ class usercontroller
 
     public function register(): void
     {
+        $name = $_POST["nombre"] ?? '';
+        $apellidos = $_POST["apellidos"] ?? '';
+        $telefono = $_POST["telefono"] ?? '';
         $email = $_POST["correo"] ?? '';
         $password = $_POST["contraseña"] ?? '';
-    
+
         if ($email && $password) {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
-            $stmt = $this->conn->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
-            $stmt->bind_param("ss", $email, $hashedPassword);
-    
+
+            $stmt = $this->conn->prepare("INSERT INTO users (nombre, apellidos, telefono, email, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $apellidos, $telefono, $email, $hashedPassword);
+
             if ($stmt->execute()) {
                 // Registro exitoso, ahora redireccionar a login
-                $url = "http://localhost/DAW1-ProyectoTransversal/view/index/index.html";
+                $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
                 header("Location: " . $url);
-            
+
                 exit();
             } else {
                 echo "Error al registrar usuario: " . $stmt->error;
@@ -79,19 +82,19 @@ class usercontroller
             echo "Faltan campos obligatorios.";
         }
     }
-    
-    
+
+
 
     public function login(): void
     {
         $email = $_POST["email"] ?? '';
         $password = $_POST["password"] ?? '';
-        
+
         $stmt = $this->conn->prepare("SELECT email, password FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row["password"])) {
                 $_SESSION["login"] = true;
@@ -107,7 +110,7 @@ class usercontroller
             echo "Usuario no encontrado.";
         }
     }
-    
+
     public function logout(): void
     {
         session_unset();
@@ -116,4 +119,3 @@ class usercontroller
         exit();
     }
 }
-?>
