@@ -52,7 +52,6 @@ class usercontroller
                     email VARCHAR(50),
                     password INT
                 )";
-            // firstname VARCHAR(30) NOT NULL,                    
 
             if ($this->conn->query($sqltb) === TRUE) {
                 echo "Table MyGuests created successfully";
@@ -95,13 +94,12 @@ class usercontroller
         echo "<p>Logout button is clicked and called.</p>";
 
 
-        session_start(); // Start the session to access session variables
-        session_unset(); // Remove all session variables
-        session_destroy(); // Destroy the session itself
+        session_start(); 
+        session_unset();
+        session_destroy(); 
 
         echo "<p>You have been logged out.</p>";
 
-        // Optionally, redirect to a login page or home
         header("Location: login.php");
         exit;
     }
