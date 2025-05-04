@@ -8,12 +8,12 @@
 </head>
 <body>
     <div class="contenedor">
-
-        <div class="logo-container" style="text-align: center; margin-top: 20px;">
-            <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
+        <div class="logo-container">
+            <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo">
         </div>
-        <h2>Regístrate</h2>
-        <form action="../registro/registro.php" method="post">
+
+        <h2>Crear cuenta</h2>
+        <form action="../DAW1-ProyectoTransversal/index.html">
             <label for="nombre">Usuario</label>
             <input type="text" id="nombre" name="nombre" required>
 
@@ -26,15 +26,13 @@
             <label for="correo">Correo electrónico</label>
             <input type="email" id="correo" name="correo" required placeholder="@">
 
-            <label for="numero">Numero telefono</label>
+            <label for="numero">Número de teléfono</label>
             <input type="number" id="numero" name="numero">
 
-            <input id="submit" type="submit" name="submit" value="Enviar" >
-            
+            <button type="submit">Enviar</button>
 
-            ¿Ya tienes una cuenta? <a href="../login/login.html">Iniciar Sesion</a>
+            <p>¿Ya tienes una cuenta? <a href="../DAW1-ProyectoTransversal/login.html">Iniciar sesión</a></p>
         </form>
     </div>
-
 </body>
 </html>
