@@ -1,30 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regístrate</title>
     <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/registro.css">
 </head>
+
 <body>
     <div class="contenedor">
-        <div class="logo-container">
-            <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo">
-        </div>
 
-        <h2>Crear cuenta</h2>
-        <form action="../DAW1-ProyectoTransversal/index.html">
+        <div class="logo-container" style="text-align: center; margin-top: 20px;">
+            <img src="../imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
+        </div>
+        <h2>Regístrate</h2>
+        <form action="../../controller/usercontroller.php" method="post">
+
             <label for="nombre">Usuario</label>
+            <form action="../../controller/usercontroller.php" method="post">
+
             <input type="text" id="nombre" name="nombre" required>
 
             <label for="apellidos">Apellidos</label>
             <input type="text" id="apellidos" name="apellidos" required>
 
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
-
             <label for="correo">Correo electrónico</label>
             <input type="email" id="correo" name="correo" required placeholder="@">
+
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseña" name="contraseña" required>
 
             <label for="numero">Número de teléfono</label>
             <input type="number" id="numero" name="numero">
@@ -32,7 +37,12 @@
             <button type="submit">Enviar</button>
 
             <p>¿Ya tienes una cuenta? <a href="../DAW1-ProyectoTransversal/login.html">Iniciar sesión</a></p>
+            <input id="submit" type="submit" name="submit" value="Enviar">
+
+            <p>¿Ya tienes una cuenta? <a href="../../login/login.html">Iniciar Sesion</a></p>
+
         </form>
     </div>
 </body>
+
 </html>

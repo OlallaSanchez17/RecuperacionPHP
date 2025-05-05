@@ -5,6 +5,10 @@
 }
 
 
+#header a {
+    background-image: url(../imgs/perfil-usuario.png);
+}
+
 /* VARIABLES */
 :root {}
 
@@ -18,27 +22,23 @@
         padding: 10px 20px;
         text-align: center;
         border: 1px solid red;
-    
+
     }
 
-    #header .img{
+    #header .img {
         width: 15%;
         height: auto;
-    }
-/* 
-    #header a{
-        background-image:url(imgs/perfil-usuario.png);
     }
 
     #header .img {
         width: 10%;
 
-    } */
+    }
 
     body {
         background-color: lightblue;
     }
-    
+
 }
 
 

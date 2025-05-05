@@ -1,27 +1,24 @@
 <?php
-
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = new usercontroller();
 
+    if (isset($_POST["submit"])) { // <- Aquí cambiamos a 'submit' para que funcione con tu formulario
+        $user->register();
+    }
     if (isset($_POST["login"])) {
-        echo "<p>Login button is clicked.</p>";
         $user->login();
     }
     if (isset($_POST["logout"])) {
-        echo "<p>Logout button is clicked.</p>";
         $user->logout();
-    }
-    if (isset($_POST["register"])) {
-        echo "<p>Register button is clicked.</p>";
-        $user->register();
     }
 }
 
 class usercontroller
 {
     private $conn;
+
     public function __construct()
     {
         $servername = "localhost";
@@ -30,82 +27,94 @@ class usercontroller
         $dbname = "spmotors";
         $tbname = "users";
 
-        $this->conn = new mysqli($servername, $username, $password, $dbname);
+        // Conectar al servidor sin base de datos
+        $this->conn = new mysqli($servername, $username, $password);
 
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
+        }
+
+        // Crear base de datos si no existe
+        $this->conn->query("CREATE DATABASE IF NOT EXISTS $dbname");
+
+        // Seleccionar base de datos
+        $this->conn->select_db($dbname);
+
+        // Crear tabla si no existe
+        $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(50) NOT NULL,
+            apellidos VARCHAR(100) NOT NULL,
+            telefono VARCHAR(20),
+            email VARCHAR(100) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL
+        )";
+
+        if (!$this->conn->query($sqltb)) {
+            echo "Error creating table: " . $this->conn->error;
+        }
+    }
+
+    public function register(): void
+    {
+        $name = $_POST["nombre"] ?? '';
+        $apellidos = $_POST["apellidos"] ?? '';
+        $telefono = $_POST["telefono"] ?? '';
+        $email = $_POST["correo"] ?? '';
+        $password = $_POST["contraseña"] ?? '';
+
+        if ($email && $password) {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $this->conn->prepare("INSERT INTO users (nombre, apellidos, telefono, email, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $apellidos, $telefono, $email, $hashedPassword);
+
+            if ($stmt->execute()) {
+                // Registro exitoso, ahora redireccionar a login
+                $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
+                header("Location: " . $url);
+
+                exit();
+            } else {
+                echo "Error al registrar usuario: " . $stmt->error;
+            }
         } else {
-            echo "Connected successfully";
-
-            $sqldb = "CREATE DATABASE IF NOT EXISTS $dbname";
-
-            if ($this->conn->query($sqldb) === TRUE) {
-
-                echo "Database created successfully";
-            } else {
-
-                echo "Error creating database: " . $this->conn->error;
-            }
-
-            $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
-                    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    email VARCHAR(50),
-                    password INT
-                )";
-
-            if ($this->conn->query($sqltb) === TRUE) {
-                echo "Table MyGuests created successfully";
-            } else {
-                echo "Error creating table: " . $this->conn->error;
-            }
+            echo "Faltan campos obligatorios.";
         }
     }
 
 
+
     public function login(): void
     {
+        $email = $_POST["email"] ?? '';
+        $password = $_POST["password"] ?? '';
 
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-
-        $stmt = $this->conn->prepare(query: "SELECT email, password FROM users WHERE email=? AND password=?");
-
-        $stmt->bind_param("ss",  $email,  $password);
+        $stmt = $this->conn->prepare("SELECT email, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($row = $result->fetch_assoc()) {
-            $_SESSION["login"] = true;
-            $_SESSION["email"] = $row["email"];
-            $_SESSION["password"] = $row["password"];
-
-            $this->conn->close();
-
-            header(header: "Location: ../view/profile.php");
-            exit();
+            if (password_verify($password, $row["password"])) {
+                $_SESSION["login"] = true;
+                $_SESSION["email"] = $row["email"];
+                $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
+                header("Location: " . $url);
+                exit();
+            } else {
+                echo "Contraseña incorrecta.";
+            }
         } else {
-            $_SESSION["login"] = false;
-            echo "No logged";
+            echo "Usuario no encontrado.";
         }
     }
 
     public function logout(): void
     {
-        echo "<p>Logout button is clicked and called.</p>";
-
-
-        session_start(); 
         session_unset();
-        session_destroy(); 
-
-        echo "<p>You have been logged out.</p>";
-
-        header("Location: login.php");
-        exit;
-    }
-
-    public function register(): void
-    {
-        echo "<p>Register button is clicked and called.</p>";
+        session_destroy();
+        header("Location: ../login/login.html");
+        exit();
     }
 }

@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regístrate</title>
     <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/login.css">
 </head>
+
 <body>
-    <div class="contenedor">
-        <div class="logo-container">
-            <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo">
+    <div class="contenedor">       
+        <div class="logo-container" style="text-align: center; margin-top: 20px;">
+            <img src="../view/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
         </div>
 
-        <h2>Regístrate</h2>
-        <form action="../DAW1-ProyectoTransversal/index.html">
-            <label for="nombre">Usuario</label>
-            <input type="text" id="nombre" name="nombre" required>
+        <h2>login</h2>
+        <form action="../controller/usercontroller.php" method="post">
 
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required placeholder="@">
 
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" required placeholder="@">
+            <label for="password">Contraseña</label>        
+            <input type="password" id="password" name="password" required>
 
-            <button type="submit" id="submit">Enviar</button>
+            <input id="submit" type="submit" name="login" value="Enviar">
 
-            <p>¿No tienes cuenta? <a href="../DAW1-ProyectoTransversal/registro.html">Crear Cuenta</a></p>            
+            <p>
+                ¿no tienes una cuenta? <a href="../view/registro/registro.html">Regístrate</a>
+            </p>
+            
         </form>
     </div>
 </body>
+
 </html>
