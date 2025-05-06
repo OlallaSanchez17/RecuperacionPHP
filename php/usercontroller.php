@@ -116,7 +116,7 @@ class usercontroller
                 if (password_verify($password, $row["password"])) {
                     $_SESSION["login"] = true;
                     $_SESSION["email"] = $row["email"];
-                    $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
+                    $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/";
                     header("Location: " . $url);
                     exit();
                 } else {
