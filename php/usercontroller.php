@@ -4,7 +4,7 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = new usercontroller();
 
-    if (isset($_POST["submit"])) { // <- Aquí cambiamos a 'submit' para que funcione con tu formulario
+    if (isset($_POST["submit"])) {
         $user->register();
     }
     if (isset($_POST["login"])) {
@@ -27,27 +27,24 @@ class usercontroller
         $dbname = "spmotors";
         $tbname = "users";
 
-        // Conectar al servidor sin base de datos
         $this->conn = new mysqli($servername, $username, $password);
 
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
 
-        // Crear base de datos si no existe
         $this->conn->query("CREATE DATABASE IF NOT EXISTS $dbname");
 
-        // Seleccionar base de datos
         $this->conn->select_db($dbname);
 
-        // Crear tabla si no existe
         $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50) NOT NULL,
             apellidos VARCHAR(100) NOT NULL,
             telefono VARCHAR(20),
             email VARCHAR(100) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL
+            password VARCHAR(255) NOT NULL,           
+            foto blob NOT NULL UNIQUE
         )";
 
         if (!$this->conn->query($sqltb)) {
@@ -70,7 +67,6 @@ class usercontroller
             $stmt->bind_param("sssss", $name, $apellidos, $telefono, $email, $hashedPassword);
 
             if ($stmt->execute()) {
-                // Registro exitoso, ahora redireccionar a login
                 $url = "http://localhost/VisualStudioCode/DAW1-ProyectoTransversal/view/index/";
                 header("Location: " . $url);
 
