@@ -2,25 +2,37 @@
 
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $controller = new eventcontroller(); // Nombre más genérico
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $controller = new eventcontroller();
 
-    try {
-        if (isset($_POST["add"])) {
-            $controller->add();
-            // Redireccionar o mostrar mensaje de éxito
-        } elseif (isset($_POST["read"])) {
-            $userData = $controller->read();
-            // Mostrar los datos o devolver como JSON
-            header('Content-Type: application/json');
-            echo json_encode($userData);
-            exit;
-        }
-        // ... manejar update y delete cuando los implementes
-    } catch (Exception $e) {
-        // Manejar el error adecuadamente
-        http_response_code(400);
-        echo $e->getMessage();
+    if (isset($_POST["readall"])) {
+        echo "<p>ReadAll button is clicked</p>";
+        $controller->readall();
+    }
+
+    if (isset($_POST["read"])) {
+        echo "<p>Read button is clicked</p>";
+        $controller->read();
+    }
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $controller = new eventcontroller();
+
+    if (isset($_POST["add"])) {
+        echo "<p>Add button is clicked</p>";
+        $controller->add();
+    }
+
+    if (isset($_POST["edit"])) {
+        echo "<p>Edit button is clicked</p>";
+        $controller->edit();
+    }
+
+    if (isset($_POST["update"])) {
+        echo "<p>Update button is clicked</p>";
+        $controller->update();
     }
 }
 
@@ -67,60 +79,63 @@ class eventcontroller
     }
 
     // Método para añadir un evento
-public function add(): void 
-{
-    // Validar y sanitizar los datos de entrada
-    $usuario = htmlspecialchars($_POST["usuario"] ?? '');
-    $nombre = htmlspecialchars($_POST["nombre"] ?? '');
-    $apellidos = htmlspecialchars($_POST["apellidos"] ?? '');
-    $telefono = htmlspecialchars($_POST["telefono"] ?? '');
-    $email = filter_var($_POST["email"] ?? '', FILTER_SANITIZE_EMAIL);
-    $password = $_POST["password"] ?? '';
-    
-    // Validar campos obligatorios
-    if (empty($usuario) || empty($nombre) || empty($apellidos) || empty($email) || empty($password)) {
-        throw new Exception("Todos los campos son obligatorios");
+    public function add(): void
+    {
+        // Validar y sanitizar los datos de entrada
+        $usuario = htmlspecialchars($_POST["usuario"] ?? '');
+        $nombre = htmlspecialchars($_POST["nombre"] ?? '');
+        $apellidos = htmlspecialchars($_POST["apellidos"] ?? '');
+        $telefono = htmlspecialchars($_POST["telefono"] ?? '');
+        $email = filter_var($_POST["email"] ?? '', FILTER_SANITIZE_EMAIL);
+        $password = $_POST["password"] ?? '';
+
+        // Validar campos obligatorios
+        if (empty($usuario) || empty($nombre) || empty($apellidos) || empty($email) || empty($password)) {
+            throw new Exception("Todos los campos son obligatorios");
+        }
+
+        // Hashear la contraseña
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Preparar y ejecutar la consulta
+        $stmt = $this->conn->prepare("INSERT INTO users (usuario, nombre, apellidos, telefono, email, password) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $usuario, $nombre, $apellidos, $telefono, $email, $hashedPassword);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error al crear el usuario: " . $stmt->error);
+        }
     }
-    
-    // Hashear la contraseña
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
-    // Preparar y ejecutar la consulta
-    $stmt = $this->conn->prepare("INSERT INTO users (usuario, nombre, apellidos, telefono, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $usuario, $nombre, $apellidos, $telefono, $email, $hashedPassword);
-    
-    if (!$stmt->execute()) {
-        throw new Exception("Error al crear el usuario: " . $stmt->error);
-    }
-}
+
+    public function edit(): void {}
 
     // Método para leer en evento
- public function read(): array 
-{
-    $id = filter_var($_POST["id"] ?? 0, FILTER_VALIDATE_INT);
-    
-    if (!$id) {
-        throw new Exception("ID de usuario no válido");
+    public function read(): array
+    {
+        $id = filter_var($_POST["id"] ?? 0, FILTER_VALIDATE_INT);
+
+        if (!$id) {
+            throw new Exception("ID de usuario no válido");
+        }
+
+        $stmt = $this->conn->prepare("SELECT id, usuario, nombre, apellidos, telefono, email FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if (!$user) {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        return $user;
     }
-    
-    $stmt = $this->conn->prepare("SELECT id, usuario, nombre, apellidos, telefono, email FROM users WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
-    
-    if (!$user) {
-        throw new Exception("Usuario no encontrado");
-    }
-    
-    return $user;
-}
+
+    public function readall(): void {}
+
     // Método para actualizar un evento
     public function update(): void {}
 
     // Método para borrar un evento
     public function delete(): void {}
-
-    
 }
