@@ -61,17 +61,19 @@ class eventcontroller
         // Seleccionar la base de datos
         $this->conn->select_db($dbname);
 
-        // Crear tabla si no existe 
-        $sqltb = "CREATE TABLE IF NOT EXISTS $tbname (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            usuario VARCHAR(50) NOT NULL UNIQUE,  
-            nombre VARCHAR(50) NOT NULL,
-            apellidos VARCHAR(100) NOT NULL,
-            telefono VARCHAR(20),
-            email VARCHAR(100) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL,           
-            foto blob NOT NULL UNIQUE
-        )";
+
+        $sqltb = "CREATE TABLE IF NO EXISTS eventos (
+        id_evento INT PRIMARY KEY AUTO_INCREMENT,
+        nombre_evento VARCHAR(100) NOT NULL,
+        fecha DATE NOT NULL,
+        ubicacion VARCHAR(150),
+        total_tickets INT NOT NULL,
+        tickets_vendidos INT DEFAULT 0,
+        precio DECIMAL(10, 2) NOT NULL,
+        organizador VARCHAR(100),
+        estado_evento ENUM('En planificación', 'Confirmado', 'Cancelado') DEFAULT 'En planificación',
+    )";
+
 
         if (!$this->conn->query($sqltb)) {
             echo "Error al crear la tabla: " . $this->conn->error;
@@ -79,57 +81,12 @@ class eventcontroller
     }
 
     // Método para añadir un evento
-    public function add(): void
-    {
-        // Validar y sanitizar los datos de entrada
-        $usuario = htmlspecialchars($_POST["usuario"] ?? '');
-        $nombre = htmlspecialchars($_POST["nombre"] ?? '');
-        $apellidos = htmlspecialchars($_POST["apellidos"] ?? '');
-        $telefono = htmlspecialchars($_POST["telefono"] ?? '');
-        $email = filter_var($_POST["email"] ?? '', FILTER_SANITIZE_EMAIL);
-        $password = $_POST["password"] ?? '';
-
-        // Validar campos obligatorios
-        if (empty($usuario) || empty($nombre) || empty($apellidos) || empty($email) || empty($password)) {
-            throw new Exception("Todos los campos son obligatorios");
-        }
-
-        // Hashear la contraseña
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Preparar y ejecutar la consulta
-        $stmt = $this->conn->prepare("INSERT INTO users (usuario, nombre, apellidos, telefono, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $usuario, $nombre, $apellidos, $telefono, $email, $hashedPassword);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Error al crear el usuario: " . $stmt->error);
-        }
-    }
+    public function add(): void {}
 
     public function edit(): void {}
 
     // Método para leer en evento
-    public function read(): array
-    {
-        $id = filter_var($_POST["id"] ?? 0, FILTER_VALIDATE_INT);
-
-        if (!$id) {
-            throw new Exception("ID de usuario no válido");
-        }
-
-        $stmt = $this->conn->prepare("SELECT id, usuario, nombre, apellidos, telefono, email FROM users WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-
-        if (!$user) {
-            throw new Exception("Usuario no encontrado");
-        }
-
-        return $user;
-    }
+    public function read(): void {}
 
     public function readall(): void {}
 
