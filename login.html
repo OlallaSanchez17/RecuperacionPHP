@@ -4,33 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Regístrate</title>
+    <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/login.css">
 </head>
 
 <body>
-    <div class="contenedor">       
+    <div class="contenedor">
         <div class="logo-container" style="text-align: center; margin-top: 20px;">
             <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
         </div>
 
-        <h2>login</h2>
-     
-        <form action="../DAW1-ProyectoTransversal/php/usercontroller.php" method="post">
+        <h2>Iniciar Sesión</h2>
 
-            <label for="nombre">Usuario</label>
-            <input type="text" id="nombre" name="nombre" required>
+        <form action="../DAW1-ProyectoTransversal/php/usercontroller.php" method="post">
 
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required placeholder="@">
 
-            <label for="password">Contraseña</label>        
+            <label for="password">Contraseña</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit">Enviar</button>
+            <button type="submit" name="login">Enviar</button>
 
-            <p>¿no tienes una cuenta? <a href="../DAW1-ProyectoTransversal/registro.html">Regístrate</a></p>
-            
+            <div id="register">
+
+                <a href="../DAW1-ProyectoTransversal/registro.html">Regístrate usuario</a>
+                <a href="../DAW1-ProyectoTransversal/register_admin.php">/ admin</a>
+
+            </div>
+
+
+
         </form>
     </div>
 </body>

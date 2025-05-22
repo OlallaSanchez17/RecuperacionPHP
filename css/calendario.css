@@ -68,7 +68,7 @@ body {
   right: 0;
   background-color: #444;
   min-width: 200px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
   z-index: 1;
   border-radius: 4px;
   border: 1px solid #555;
@@ -126,7 +126,8 @@ h1 {
   padding-bottom: 0.5rem;
 }
 
-.weekdays, .days {
+.weekdays,
+.days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
@@ -137,6 +138,7 @@ h1 {
   font-weight: bold;
   padding: 0.5rem;
   color: #FFBB06;
+  text-decoration: none;
 }
 
 .day {
@@ -147,6 +149,9 @@ h1 {
   transition: all 0.2s;
   background-color: #555;
   color: #fff;
+  text-decoration: none;
+
+
 }
 
 .day:hover {
@@ -161,6 +166,7 @@ h1 {
   font-weight: bold;
   position: relative;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .day.event.important {
@@ -207,41 +213,49 @@ h1 {
   .nav-container {
     padding: 1rem;
   }
-  
+
   .nav-logo {
     font-size: 1.5rem;
   }
-  
+
   .month {
     width: 100%;
     max-width: 300px;
   }
-  
+
   .dropdown-content {
     min-width: 160px;
   }
+
+
 }
+
 
 @media (max-width: 480px) {
   .nav-links {
     gap: 1rem;
   }
-  
+
   .login-btn {
     padding: 0.5rem 1rem;
   }
-  
+
   h1 {
     font-size: 2rem;
     margin: 1.5rem 0;
   }
-  
+
   .year-calendar {
     padding: 0 1rem 1rem;
     gap: 1.5rem;
   }
-  
+
   .month h2 {
     font-size: 1.3rem;
   }
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
 }
