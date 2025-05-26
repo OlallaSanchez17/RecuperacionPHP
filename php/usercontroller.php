@@ -31,6 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user->delete();
     }
 
+    if (isset($_POST["update_datauser"])) {
+        echo "<p>Update password button is clicked. </p>";
+        $user->updateDataUser();
+    }
+
     if (isset($_POST["update_password"])) {
         echo "<p>Update password button is clicked. </p>";
         $user->updatePassword();
@@ -251,80 +256,117 @@ class usercontroller
         }
     }
 
+    public function updateDataUser(): void
+    {
+        session_start();
+
+        // Verificar si el usuario está autenticado
+        if (!isset($_SESSION['username'])) {
+            $_SESSION['error_message'] = "Debes iniciar sesión para actualizar tus datos.";
+            header("Location: ../error.php");
+            exit;
+        }
+
+        $nuevoUsuario = trim($_POST["new_username"] ?? '');
+        $nuevoEmail = trim($_POST["new_email"] ?? '');
+        $usuarioActual = $_SESSION['username'];
+
+        // Validaciones básicas
+        if (empty($nuevoUsuario) || empty($nuevoEmail)) {
+            $_SESSION['error_message'] = "Todos los campos son obligatorios.";
+            header("Location: ../error.php");
+            exit;
+        }
+
+        if (!filter_var($nuevoEmail, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_message'] = "El correo electrónico no es válido.";
+            header("Location: ../error.php");
+            exit;
+        }
+
+        try {
+            $stmt = $this->conn->prepare("UPDATE users SET usuario = :nuevoUsuario, email = :nuevoEmail WHERE usuario = :usuarioActual");
+
+            $stmt->bindParam(":nuevoUsuario", $nuevoUsuario);
+            $stmt->bindParam(":nuevoEmail", $nuevoEmail);
+            $stmt->bindParam(":usuarioActual", $usuarioActual);
+
+            $stmt->execute();
+
+            // Actualizar los datos en la sesión
+            $_SESSION['username'] = $nuevoUsuario;
+            $_SESSION['email'] = $nuevoEmail;
+
+            header("Location: ../profileuser.php");
+            exit;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error_message'] = "El nombre de usuario o correo ya está en uso.";
+            } else {
+                $_SESSION['error_message'] = "Error al actualizar los datos: " . $e->getMessage();
+            }
+
+            header("Location: ../error.php");
+            exit;
+        }
+    }
+
+
     public function updatePassword(): void
     {
         session_start();
 
-        // Verificar si hay una sesión activa
-        if (!isset($_SESSION['email'])) {
-            $_SESSION['error_message'] = "Debes iniciar sesión para cambiar la contraseña";
-            header("Location: ../login.php");
-            exit();
+        if (!isset($_SESSION['username'])) {
+            $_SESSION['error_message'] = "Debes iniciar sesión para cambiar tu contraseña.";
+            header("Location: ../error.php");
+            exit;
         }
 
-        // Verificar que se enviaron las contraseñas necesarias
-        if (!isset($_POST['current_password']) || !isset($_POST['new_password']) || !isset($_POST['confirm_password'])) {
-            $_SESSION['error_message'] = "Todos los campos son obligatorios";
-            $redirect = ($_SESSION['rol'] === "admin") ? "../profileadmin.php" : "../profileuser.php";
-            header("Location: $redirect");
-            exit();
+        $usuario = $_SESSION['username'];
+        $passwordActual = $_POST['current_password'] ?? '';
+        $nuevaPassword = $_POST['new_password'] ?? '';
+        $confirmarPassword = $_POST['confirm_password'] ?? '';
+
+        // Validaciones básicas
+        if (empty($passwordActual) || empty($nuevaPassword) || empty($confirmarPassword)) {
+            $_SESSION['error_message'] = "Todos los campos son obligatorios.";
+            header("Location: ../error.php");
+            exit;
         }
 
-        $email = $_SESSION['email'];
-        $currentPassword = $_POST['current_password'];
-        $newPassword = $_POST['new_password'];
-        $confirmPassword = $_POST['confirm_password'];
-
-        // Validar que las nuevas contraseñas coincidan
-        if ($newPassword !== $confirmPassword) {
-            $_SESSION['error_message'] = "Las nuevas contraseñas no coinciden";
-            $redirect = ($_SESSION['rol'] === "admin") ? "../profileadmin.php" : "../profileuser.php";
-            header("Location: $redirect");
-            exit();
+        if ($nuevaPassword !== $confirmarPassword) {
+            $_SESSION['error_message'] = "Las nuevas contraseñas no coinciden.";
+            header("Location: ../error.php");
+            exit;
         }
 
         try {
-            // Obtener la contraseña actual del usuario
-            $stmt = $this->conn->prepare("SELECT password FROM users WHERE email = :email");
-            $stmt->bindParam(":email", $email);
+            // Obtener la contraseña actual de la base de datos
+            $stmt = $this->conn->prepare("SELECT password FROM users WHERE usuario = :usuario");
+            $stmt->bindParam(":usuario", $usuario);
             $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$user) {
-                $_SESSION['error_message'] = "Usuario no encontrado";
-                header("Location: ../login.php");
-                exit();
+            if (!$resultado || !password_verify($passwordActual, $resultado['password'])) {
+                $_SESSION['error_message'] = "La contraseña actual es incorrecta.";
+                header("Location: ../error.php");
+                exit;
             }
 
-            // Verificar que la contraseña actual sea correcta
-            if (!password_verify($currentPassword, $user['password'])) {
-                $_SESSION['error_message'] = "La contraseña actual es incorrecta";
-                $redirect = ($_SESSION['rol'] === "admin") ? "../profileadmin.php" : "../profileuser.php";
-                header("Location: $redirect");
-                exit();
-            }
+            // Actualizar la contraseña
+            $nuevaPasswordHash = password_hash($nuevaPassword, PASSWORD_DEFAULT);
+            $updateStmt = $this->conn->prepare("UPDATE users SET password = :nuevaPassword WHERE usuario = :usuario");
+            $updateStmt->bindParam(":nuevaPassword", $nuevaPasswordHash);
+            $updateStmt->bindParam(":usuario", $usuario);
+            $updateStmt->execute();
 
-            // Hashear la nueva contraseña
-            $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-
-            // Actualizar la contraseña en la base de datos
-            $updateStmt = $this->conn->prepare("UPDATE users SET password = :password WHERE email = :email");
-            $updateStmt->bindParam(":password", $newPasswordHash);
-            $updateStmt->bindParam(":email", $email);
-
-            if ($updateStmt->execute()) {
-                $_SESSION['success_message'] = "Contraseña actualizada correctamente";
-            } else {
-                $_SESSION['error_message'] = "Error al actualizar la contraseña";
-            }
+            $_SESSION['success_message'] = "Contraseña actualizada correctamente.";
+            header("Location: ../profileuser.php");
+            exit;
         } catch (PDOException $e) {
-            $_SESSION['error_message'] = "Error en la base de datos: " . $e->getMessage();
+            $_SESSION['error_message'] = "Error al actualizar la contraseña: " . $e->getMessage();
+            header("Location: ../error.php");
+            exit;
         }
-
-        // Redirigir a la página de perfil correspondiente
-        $redirect = ($_SESSION['rol'] === "admin") ? "../profileadmin.php" : "../profileuser.php";
-        header("Location: $redirect");
-        exit();
     }
 }
