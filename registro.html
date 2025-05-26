@@ -14,27 +14,23 @@
         <div class="logo-container" style="text-align: center; margin-top: 20px;">
             <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
         </div>
+
         <h2>Regístrate</h2>
-            <form action="../DAW1-ProyectoTransversal/php/usercontroller.php" method="post">
 
-            <label for="nombre">Usuario</label>
-            <input type="text" id="nombre" name="nombre" required>
+        <form action="../DAW1-ProyectoTransversal/php/usercontroller.php" method="post" enctype="multipart/form-data">
 
-            <label for="apellidos">Apellidos</label>
-            <input type="text" id="apellidos" name="apellidos" required>
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required>
 
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" required placeholder="@">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required placeholder="@">
 
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
 
-            <label for="numero">Número de teléfono</label>
-            <input type="number" id="numero" name="numero">
+            <button type="submit" name="register_user">Enviar</button>
 
-            <button type="submit">Enviar</button>
-
-            <p>¿Ya tienes una cuenta? <a href="../DAW1-ProyectoTransversal/login.html">Iniciar Sesion</a></p>
+            <p>¿Ya tienes una cuenta? <a href="../DAW1-ProyectoTransversal/login.html">Iniciar Sesión</a></p>
 
         </form>
     </div>
