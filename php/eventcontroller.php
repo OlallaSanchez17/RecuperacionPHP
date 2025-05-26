@@ -52,7 +52,7 @@ class EventController
     {
         $servername = "localhost";
         $username = "root";
-        $password = "";
+        $password = "1234";
         $dbname = "spmotors";
 
         $this->conn = new mysqli($servername, $username, $password, $dbname);
