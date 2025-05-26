@@ -38,15 +38,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 session_start();
 
-class EventController {
+class EventController
+{
     private $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->connectDB();
         $this->createTable();
     }
 
-    private function connectDB() {
+    private function connectDB()
+    {
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -59,7 +62,8 @@ class EventController {
         }
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS eventos (
             id_evento INT PRIMARY KEY AUTO_INCREMENT,
             nombre_evento VARCHAR(100) NOT NULL,
@@ -82,7 +86,8 @@ class EventController {
         }
     }
 
-    public function handleRequest() {
+    public function handleRequest()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
@@ -111,7 +116,8 @@ class EventController {
         }
     }
 
-    public function addEvent() {
+    public function addEvent()
+    {
         // Validar y sanitizar datos
         $nombre = $this->sanitize($_POST['nombre_evento']);
         $fecha = $this->sanitize($_POST['fecha']);
@@ -148,7 +154,8 @@ class EventController {
         $stmt->close();
     }
 
-    private function uploadImage($file) {
+    private function uploadImage($file)
+    {
         $targetDir = "uploads/";
         if (!file_exists($targetDir)) {
             mkdir($targetDir, 0777, true);
@@ -181,7 +188,8 @@ class EventController {
         }
     }
 
-    public function getAllEvents() {
+    public function getAllEvents()
+    {
         $result = $this->conn->query("SELECT * FROM eventos ORDER BY fecha, hora");
         $events = [];
 
@@ -193,7 +201,8 @@ class EventController {
         echo json_encode($events);
     }
 
-    public function getEventById($id) {
+    public function getEventById($id)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM eventos WHERE id_evento = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -209,7 +218,8 @@ class EventController {
         $stmt->close();
     }
 
-    public function updateEvent() {
+    public function updateEvent()
+    {
         $id = (int)$_POST['id_evento'];
         $nombre = $this->sanitize($_POST['nombre_evento']);
         $fecha = $this->sanitize($_POST['fecha']);
@@ -244,20 +254,21 @@ class EventController {
             $_SESSION['error'] = "Error al actualizar evento: " . $stmt->error;
         }
         $stmt->close();
-        
+
         header("Location: editar_evento.php?id=$id");
         exit();
     }
 
-    public function deleteEvent() {
+    public function deleteEvent()
+    {
         $id = (int)$_POST['id_evento'];
-        
+
         // Primero eliminar la imagen asociada si existe
         $stmt = $this->conn->prepare("SELECT imagen FROM eventos WHERE id_evento = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             if (!empty($row['imagen']) && file_exists($row['imagen'])) {
@@ -265,27 +276,29 @@ class EventController {
             }
         }
         $stmt->close();
-        
+
         // Luego eliminar el evento
         $stmt = $this->conn->prepare("DELETE FROM eventos WHERE id_evento = ?");
         $stmt->bind_param("i", $id);
-        
+
         if ($stmt->execute()) {
             $_SESSION['mensaje'] = "Evento eliminado exitosamente!";
         } else {
             $_SESSION['error'] = "Error al eliminar evento: " . $stmt->error;
         }
         $stmt->close();
-        
+
         header("Location: Calendario.html");
         exit();
     }
 
-    private function sanitize($data) {
+    private function sanitize($data)
+    {
         return htmlspecialchars(stripslashes(trim($data)));
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->conn->close();
     }
 }
@@ -299,4 +312,3 @@ try {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
-?>
