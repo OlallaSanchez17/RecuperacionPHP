@@ -81,10 +81,27 @@ class usercontroller
 
     public function register($rol): void
     {
-        $usuario = $_POST["username"];
-        $email = $_POST["email"];
-        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        session_start(); // Asegúrate de que la sesión esté iniciada
+
+        $usuario = trim($_POST["username"] ?? '');
+        $email = trim($_POST["email"] ?? '');
+        $passwordRaw = $_POST["password"] ?? '';
         $foto = null;
+
+        // Validaciones básicas
+        if (empty($usuario) || empty($email) || empty($passwordRaw)) {
+            $_SESSION['error_message'] = "Todos los campos son obligatorios.";
+            header("Location: ../error.php");
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_message'] = "El correo electrónico no es válido.";
+            header("Location: ../error.php");
+            exit;
+        }
+
+        $password = password_hash($passwordRaw, PASSWORD_DEFAULT);
 
         // Solo admins pueden subir imagen
         if ($rol === "admin" && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
@@ -93,7 +110,7 @@ class usercontroller
 
         try {
             $stmt = $this->conn->prepare("INSERT INTO users (usuario, email, password, rol, foto)
-            VALUES (:usuario, :email, :password, :rol, :foto)");
+                                      VALUES (:usuario, :email, :password, :rol, :foto)");
 
             $stmt->bindParam(":usuario", $usuario);
             $stmt->bindParam(":email", $email);
@@ -101,37 +118,46 @@ class usercontroller
             $stmt->bindParam(":rol", $rol);
             $stmt->bindParam(":foto", $foto, PDO::PARAM_LOB);
 
-            if ($stmt->execute()) {
-                $_SESSION['logged'] = true;
-                $_SESSION['username'] = $usuario;
-                $_SESSION['email'] = $email;
-                $_SESSION['rol'] = $rol;
-                header("Location: ../index.php");
-                exit;
-            } else {
-                $_SESSION['error_message'] = "No se pudo registrar el usuario.";
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error_message'] = "Error: " . $e->getMessage();
-        }
+            $stmt->execute();
 
-        $redirect = ($rol === "admin") ? "../profileadmin.php" : "../profileuser.php";
-        header("Location: $redirect");
-        exit;
+            $_SESSION['logged'] = true;
+            $_SESSION['username'] = $usuario;
+            $_SESSION['email'] = $email;
+            $_SESSION['rol'] = $rol;
+
+            // Redirigir según el rol
+            $redirect = ($rol === "admin") ? "../profileadmin.php" : "../profileuser.php";
+            header("Location: $redirect");
+            exit;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error_message'] = "El nombre de usuario o correo ya está registrado.";
+            } else {
+                $_SESSION['error_message'] = "Error al registrar: " . $e->getMessage();
+            }
+
+            header("Location: ../error.php");
+            exit;
+        }
     }
+
+
 
 
 
     // Método para iniciar sesión
     public function login(): void
     {
-        $email = htmlspecialchars($_POST["email"] ?? '');
+        session_start();
+
+        $email = trim($_POST["email"] ?? '');
         $password = $_POST["password"] ?? '';
 
+        // Validación de campos vacíos
         if (empty($email) || empty($password)) {
             $_SESSION['error_message'] = "Debe ingresar correo y contraseña.";
-            header("Location: ../login.php"); // Ajusta la ruta
-            exit();
+            header("Location: ../error.php");
+            exit;
         }
 
         try {
@@ -141,34 +167,31 @@ class usercontroller
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$user) {
+            if (!$user || !password_verify($password, $user["password"])) {
                 $_SESSION['error_message'] = "Correo o contraseña incorrectos.";
-                header("Location: ../login.php");
-                exit();
-            }
-
-            if (!password_verify($password, $user["password"])) {
-                $_SESSION['error_message'] = "Correo o contraseña incorrectos.";
-                header("Location: ../login.php");
-                exit();
+                header("Location: ../error.php");
+                exit;
             }
 
             // Login exitoso
-            $_SESSION["logged"] = true; // Cambiado a 'logged' para ser consistente
+            $_SESSION["logged"] = true;
             $_SESSION["email"] = $user["email"];
             $_SESSION["username"] = $user["usuario"];
             $_SESSION["rol"] = $user["rol"];
             $_SESSION["profile_image"] = $user["foto"] ?? null;
 
-            header("Location: ../index.php");
-            exit();
+            // Redirigir según el rol
+            $redirect = ($user["rol"] === "admin") ? "../profileadmin.php" : "../profileuser.php";
+            header("Location: $redirect");
+            exit;
         } catch (PDOException $e) {
-            $_SESSION['error_message'] = "Error en el sistema. Por favor intente más tarde.";
-            error_log("Login error: " . $e->getMessage()); // Log del error
-            header("Location: ../login.php");
-            exit();
+            $_SESSION['error_message'] = "Error en el sistema. Por favor, intente más tarde.";
+            error_log("Login error: " . $e->getMessage());
+            header("Location: ../error.php");
+            exit;
         }
     }
+
 
 
 
@@ -186,8 +209,9 @@ class usercontroller
         session_start();
 
         if (!isset($_SESSION['email'])) {
-            echo "No hay sesión activa.";
-            return;
+            $_SESSION['error_message'] = "No hay sesión activa para eliminar la cuenta.";
+            header("Location: ../error.php");
+            exit;
         }
 
         $email = $_SESSION['email'];
@@ -211,16 +235,21 @@ class usercontroller
                     header("Location: ../index.php");
                     exit;
                 } else {
-                    echo "Error al intentar eliminar la cuenta.";
+                    $_SESSION['error_message'] = "Error al intentar eliminar la cuenta.";
+                    header("Location: ../error.php");
+                    exit;
                 }
             } else {
-                echo "Usuario no encontrado.";
+                $_SESSION['error_message'] = "Usuario no encontrado.";
+                header("Location: ../error.php");
+                exit;
             }
         } catch (PDOException $e) {
-            echo "Error en la base de datos: " . $e->getMessage();
+            $_SESSION['error_message'] = "Error en la base de datos: " . $e->getMessage();
+            header("Location: ../error.php");
+            exit;
         }
     }
-
 
     public function updatePassword(): void
     {

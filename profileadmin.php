@@ -49,6 +49,9 @@ try {
     <form action="php/usercontroller.php" method="POST">
         <button type="submit" name="delete_account" id="logout" class="button">Eliminar Cuenta</button>
     </form>
+    <form action="php/eventcontroller.php" method="POST">
+        <button type="submit" name="delete_account" id="logout" class="button">Adminisitrar eventos</button>
+    </form>
 </body>
 
 </html>
