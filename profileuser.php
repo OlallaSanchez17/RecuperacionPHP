@@ -6,7 +6,6 @@ session_start();
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
 </head>
 
@@ -16,13 +15,13 @@ session_start();
     <p>Rol: <?php echo $_SESSION['rol']; ?></p>
 
     <form action="php/usercontroller.php" method="POST">
-        <button type="submit" name="logout" id="logout" class="button">Cerrar Sesión</button>
-    </form>
-    <form action="php/usercontroller.php" method="POST">
-        <button type="submit" name="delete_account" id="logout" class="button">Eliminar Cuenta</button>
+        <button type="submit" name="logout" class="button">Cerrar Sesión</button>
     </form>
 
-
+    <!-- Redirige a la página de confirmación -->
+    <form action="confirm_delete.php" method="GET">
+        <button type="submit" class="button">Eliminar Cuenta</button>
+    </form>
 </body>
 
 </html>
