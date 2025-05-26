@@ -19,6 +19,11 @@ session_start();
         <button type="submit" name="logout" class="button">Cerrar Sesión</button>
     </form>
 
+    <a href="updateUserData.html">Actualizar Datos</a><br>
+    <a href="updatePassword.html">Actualizar Contraseña</a>
+
+
+
     <!-- Redirige a la página de confirmación -->
     <form action="confirm_delete.php" method="GET">
         <button type="submit" class="button">Eliminar Cuenta</button>
