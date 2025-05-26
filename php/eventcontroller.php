@@ -7,12 +7,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
     if (isset($_POST["readall"])) {
         echo "<p>ReadAll button is clicked</p>";
-        $controller->readall();
+        $controller->getAllEvents();
     }
 
     if (isset($_POST["read"])) {
         echo "<p>Read button is clicked</p>";
-        $controller->read();
+        $controller->getEventById($_GET['id']);
     }
 }
 
@@ -22,17 +22,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST["add"])) {
         echo "<p>Add button is clicked</p>";
-        $controller->add();
-    }
-
-    if (isset($_POST["edit"])) {
-        echo "<p>Edit button is clicked</p>";
-        $controller->edit();
+        $controller->addEvent();
     }
 
     if (isset($_POST["update"])) {
-        echo "<p>Update button is clicked</p>";
-        $controller->update();
+        echo "<p>Edit button is clicked</p>";
+        $controller->updateEvent();
+    }
+
+    if (isset($_POST["Delete"])) {
+        echo "<p>Delete button is clicked</p>";
+        $controller->deleteEvent();
     }
 }
 
@@ -86,35 +86,7 @@ class EventController
         }
     }
 
-    public function handleRequest()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (isset($_GET['action'])) {
-                switch ($_GET['action']) {
-                    case 'getAll':
-                        $this->getAllEvents();
-                        break;
-                    case 'getById':
-                        $this->getEventById($_GET['id']);
-                        break;
-                }
-            }
-        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['action'])) {
-                switch ($_POST['action']) {
-                    case 'add':
-                        $this->addEvent();
-                        break;
-                    case 'update':
-                        $this->updateEvent();
-                        break;
-                    case 'delete':
-                        $this->deleteEvent();
-                        break;
-                }
-            }
-        }
-    }
+
 
     public function addEvent()
     {
@@ -301,14 +273,4 @@ class EventController
     {
         $this->conn->close();
     }
-}
-
-// Manejo de la solicitud
-$controller = new EventController();
-
-try {
-    $controller->handleRequest();
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
 }
