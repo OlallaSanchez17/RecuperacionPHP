@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Evento</title>
+    <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/CrearEvento.css">
+
+</head>
+  <header>
+      <nav>
+          <div class="nav-container">
+            <div class="nav-logo">SP MOTORS</div>
+            <div class="nav-links">
+              <div class="dropdown">
+                <button class="menu-btn">≡</button>
+                <div class="dropdown-content">
+                  <a href="../DAW1-ProyectoTransversal/index.html">Menu</a>
+                  <a href="../DAW1-ProyectoTransversal/Calendario.html">Calendario de eventos</a>
+                  <a href="../DAW1-ProyectoTransversal/tickets.html">Venta de tickets</a>
+                  <a href="../DAW1-ProyectoTransversal/Comunidad.html">Comunidad</a>
+                  <a href="../DAW1-ProyectoTransversal/Noticias.html">Noticias</a>
+                </div>
+              </div>
+              <a href="../DAW1-ProyectoTransversal/login.html" class="login-btn">Iniciar Sesión</a>
+            </div>
+          </div>
+        </nav>
+  </header>
+<body>
+
+  <form action="/crear-evento" method="post" enctype="multipart/form-data">
+    <h2>Crear Nuevo Evento</h2>
+
+    <label for="titulo">Título del Evento:</label>
+    <input type="text" id="titulo" name="titulo" required>
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" required>
+
+    <label for="hora">Hora:</label>
+    <input type="time" id="hora" name="hora" required>
+
+    <label for="lugar">Lugar:</label>
+    <input type="text" id="lugar" name="lugar" required>
+
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" name="descripcion" rows="5" required></textarea>
+
+    <label for="categoria">Categoría:</label>
+    <select id="categoria" name="categoria" required>
+      <option value="">-- Selecciona una categoría --</option>
+      <option value="Competiciones">Competiciones y carreras </option>
+      <option value="Concentraciones">Concentraciones y Exposiciones</option>
+      <option value="Ferias">Ferias y Salones del Automóvil</option>
+      <option value="Eventos">Eventos de Experiencia de Conducción</option>
+      <option value="Tuning">Tuning y Customización</option>
+      <option value="Otros">Otros</option>
+
+    </select>
+
+    <button type="submit">Crear Evento</button>
+  </form>
+
+</body>
+</html> 
