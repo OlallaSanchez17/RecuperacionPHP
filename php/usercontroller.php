@@ -51,7 +51,7 @@ class usercontroller
     {
         $servername = "localhost";
         $username = "root";
-        $password = "";
+        $password = "1234";
         $dbname = "spmotors";
 
         try {
