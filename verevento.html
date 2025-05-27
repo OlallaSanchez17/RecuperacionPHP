@@ -7,7 +7,7 @@
 <body>
   <h1>Lista de eventos</h1>
 
-  <a href="añadir_evento.html">➕ Nuevo Evento</a><br /><br />
+  <a href="CrearEvento.html">➕ Nuevo Evento</a><br /><br />
 
   <table border="1" cellpadding="8">
     <thead>
@@ -27,7 +27,7 @@
   <script>
     // Cargar eventos dinámicamente desde EventController.php
     function cargarEventos() {
-      fetch('EventController.php?action=list')
+      fetch('eventcontroller.php?action=list')
         .then(response => response.json())
         .then(eventos => {
           const tbody = document.getElementById('tabla-eventos');
