@@ -1,276 +1,157 @@
 <?php
-
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $controller = new eventcontroller();
-
-    if (isset($_POST["readall"])) {
-        echo "<p>ReadAll button is clicked</p>";
-        $controller->getAllEvents();
-    }
-
-    if (isset($_POST["read"])) {
-        echo "<p>Read button is clicked</p>";
-        $controller->getEventById($_GET['id']);
-    }
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $controller = new eventcontroller();
-
-    if (isset($_POST["add"])) {
-        echo "<p>Add button is clicked</p>";
-        $controller->addEvent();
-    }
-
-    if (isset($_POST["update"])) {
-        echo "<p>Edit button is clicked</p>";
-        $controller->updateEvent();
-    }
-
-    if (isset($_POST["Delete"])) {
-        echo "<p>Delete button is clicked</p>";
-        $controller->deleteEvent();
-    }
-}
-
-session_start();
-
 class EventController
 {
     private $conn;
 
     public function __construct()
     {
-        $this->connectDB();
-        $this->createTable();
-    }
-
-    private function connectDB()
-    {
         $servername = "localhost";
         $username = "root";
-        $password = "1234";
+        $password = "";
         $dbname = "spmotors";
 
-        $this->conn = new mysqli($servername, $username, $password, $dbname);
-
-        if ($this->conn->connect_error) {
-            die("Error de conexión: " . $this->conn->connect_error);
+        try {
+            $this->conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Error de conexión: " . $e->getMessage());
         }
     }
 
-    private function createTable()
+    // Crear un nuevo evento
+    public function createEvent($nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $imagen)
     {
-        $sql = "CREATE TABLE IF NOT EXISTS eventos (
-            id_evento INT PRIMARY KEY AUTO_INCREMENT,
-            nombre_evento VARCHAR(100) NOT NULL,
-            fecha DATE NOT NULL,
-            hora TIME NOT NULL,
-            ubicacion VARCHAR(150) NOT NULL,
-            descripcion TEXT NOT NULL,
-            categoria ENUM('Competiciones', 'Concentraciones', 'Ferias', 'Eventos', 'Tuning', 'Otros') NOT NULL,
-            total_tickets INT NOT NULL,
-            tickets_vendidos INT DEFAULT 0,
-            precio DECIMAL(10, 2),
-            organizador VARCHAR(100),
-            imagen VARCHAR(255),
-            estado_evento ENUM('En planificación', 'Confirmado', 'Cancelado') DEFAULT 'En planificación',
-            fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )";
-
-        if (!$this->conn->query($sql)) {
-            die("Error al crear tabla: " . $this->conn->error);
-        }
+        $sql = "INSERT INTO events (nombre_evento, fecha, hora, ubicacion, descripcion, categoria, total_tickets, precio, organizador, imagen)
+                VALUES (:nombre_evento, :fecha, :hora, :ubicacion, :descripcion, :categoria, :total_tickets, :precio, :organizador, :imagen)";
+                
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':nombre_evento', $nombre_evento);
+        $stmt->bindParam(':fecha', $fecha);
+        $stmt->bindParam(':hora', $hora);
+        $stmt->bindParam(':ubicacion', $ubicacion);
+        $stmt->bindParam(':descripcion', $descripcion);
+        $stmt->bindParam(':categoria', $categoria);
+        $stmt->bindParam(':total_tickets', $total_tickets);
+        $stmt->bindParam(':precio', $precio);
+        $stmt->bindParam(':organizador', $organizador);
+        $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
+        
+        return $stmt->execute();
     }
 
-
-
-    public function addEvent()
+    // Obtener lista de eventos
+    public function getEvents()
     {
-        // Validar y sanitizar datos
-        $nombre = $this->sanitize($_POST['nombre_evento']);
-        $fecha = $this->sanitize($_POST['fecha']);
-        $hora = $this->sanitize($_POST['hora']);
-        $ubicacion = $this->sanitize($_POST['ubicacion']);
-        $descripcion = $this->sanitize($_POST['descripcion']);
-        $categoria = $this->sanitize($_POST['categoria']);
-        $total_tickets = (int)$_POST['total_tickets'];
-        $precio = isset($_POST['precio']) ? (float)$_POST['precio'] : 0;
-        $organizador = isset($_POST['organizador']) ? $this->sanitize($_POST['organizador']) : '';
-
-        // Manejo de la imagen
-        $imagen = '';
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $imagen = $this->uploadImage($_FILES['imagen']);
-        }
-
-        $stmt = $this->conn->prepare("
-            INSERT INTO eventos 
-            (nombre_evento, fecha, hora, ubicacion, descripcion, categoria, total_tickets, precio, organizador, imagen) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->bind_param("ssssssidss", $nombre, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $imagen);
-
-        if ($stmt->execute()) {
-            $_SESSION['mensaje'] = "Evento creado exitosamente!";
-            header("Location: Calendario.html");
-            exit();
-        } else {
-            $_SESSION['error'] = "Error al crear evento: " . $stmt->error;
-            header("Location: CrearEvento.html");
-            exit();
-        }
-        $stmt->close();
+        $sql = "SELECT * FROM events";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function uploadImage($file)
+    // Obtener un evento por ID
+    public function getEventById($id_evento)
     {
-        $targetDir = "uploads/";
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir, 0777, true);
-        }
-
-        $fileName = uniqid() . '_' . basename($file['name']);
-        $targetFile = $targetDir . $fileName;
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // Validar que es una imagen
-        $check = getimagesize($file['tmp_name']);
-        if ($check === false) {
-            throw new Exception("El archivo no es una imagen.");
-        }
-
-        // Validar tamaño (max 5MB)
-        if ($file['size'] > 5000000) {
-            throw new Exception("La imagen es demasiado grande (máx 5MB).");
-        }
-
-        // Validar formato
-        if (!in_array($imageFileType, ['jpg', 'jpeg', 'png', 'gif'])) {
-            throw new Exception("Solo se permiten formatos JPG, JPEG, PNG y GIF.");
-        }
-
-        if (move_uploaded_file($file['tmp_name'], $targetFile)) {
-            return $targetFile;
-        } else {
-            throw new Exception("Error al subir la imagen.");
-        }
-    }
-
-    public function getAllEvents()
-    {
-        $result = $this->conn->query("SELECT * FROM eventos ORDER BY fecha, hora");
-        $events = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $events[] = $row;
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($events);
-    }
-
-    public function getEventById($id)
-    {
-        $stmt = $this->conn->prepare("SELECT * FROM eventos WHERE id_evento = ?");
-        $stmt->bind_param("i", $id);
+        $sql = "SELECT * FROM events WHERE id_evento = :id_evento";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_evento', $id_evento);
         $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            header('Content-Type: application/json');
-            echo json_encode($result->fetch_assoc());
-        } else {
-            http_response_code(404);
-            echo json_encode(["error" => "Evento no encontrado"]);
-        }
-        $stmt->close();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateEvent()
+    // Actualizar un evento existente
+    public function updateEvent($id_evento, $nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $estado_evento, $imagen)
     {
-        $id = (int)$_POST['id_evento'];
-        $nombre = $this->sanitize($_POST['nombre_evento']);
-        $fecha = $this->sanitize($_POST['fecha']);
-        $hora = $this->sanitize($_POST['hora']);
-        $ubicacion = $this->sanitize($_POST['ubicacion']);
-        $descripcion = $this->sanitize($_POST['descripcion']);
-        $categoria = $this->sanitize($_POST['categoria']);
-        $total_tickets = (int)$_POST['total_tickets'];
-        $precio = isset($_POST['precio']) ? (float)$_POST['precio'] : 0;
-        $organizador = isset($_POST['organizador']) ? $this->sanitize($_POST['organizador']) : '';
-        $estado = isset($_POST['estado_evento']) ? $this->sanitize($_POST['estado_evento']) : 'En planificación';
+        $sql = "UPDATE events SET nombre_evento = :nombre_evento, fecha = :fecha, hora = :hora, ubicacion = :ubicacion, descripcion = :descripcion, 
+                categoria = :categoria, total_tickets = :total_tickets, precio = :precio, organizador = :organizador, estado_evento = :estado_evento, imagen = :imagen
+                WHERE id_evento = :id_evento";
 
-        $stmt = $this->conn->prepare("
-            UPDATE eventos SET 
-            nombre_evento = ?, 
-            fecha = ?, 
-            hora = ?, 
-            ubicacion = ?, 
-            descripcion = ?, 
-            categoria = ?, 
-            total_tickets = ?, 
-            precio = ?, 
-            organizador = ?, 
-            estado_evento = ? 
-            WHERE id_evento = ?
-        ");
-        $stmt->bind_param("ssssssidssi", $nombre, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $estado, $id);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_evento', $id_evento);
+        $stmt->bindParam(':nombre_evento', $nombre_evento);
+        $stmt->bindParam(':fecha', $fecha);
+        $stmt->bindParam(':hora', $hora);
+        $stmt->bindParam(':ubicacion', $ubicacion);
+        $stmt->bindParam(':descripcion', $descripcion);
+        $stmt->bindParam(':categoria', $categoria);
+        $stmt->bindParam(':total_tickets', $total_tickets);
+        $stmt->bindParam(':precio', $precio);
+        $stmt->bindParam(':organizador', $organizador);
+        $stmt->bindParam(':estado_evento', $estado_evento);
+        $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
 
-        if ($stmt->execute()) {
-            $_SESSION['mensaje'] = "Evento actualizado exitosamente!";
-        } else {
-            $_SESSION['error'] = "Error al actualizar evento: " . $stmt->error;
-        }
-        $stmt->close();
-
-        header("Location: editar_evento.php?id=$id");
-        exit();
+        return $stmt->execute();
     }
 
-    public function deleteEvent()
+    // Eliminar un evento por ID
+    public function deleteEvent($id_evento)
     {
-        $id = (int)$_POST['id_evento'];
-
-        // Primero eliminar la imagen asociada si existe
-        $stmt = $this->conn->prepare("SELECT imagen FROM eventos WHERE id_evento = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            if (!empty($row['imagen']) && file_exists($row['imagen'])) {
-                unlink($row['imagen']);
-            }
-        }
-        $stmt->close();
-
-        // Luego eliminar el evento
-        $stmt = $this->conn->prepare("DELETE FROM eventos WHERE id_evento = ?");
-        $stmt->bind_param("i", $id);
-
-        if ($stmt->execute()) {
-            $_SESSION['mensaje'] = "Evento eliminado exitosamente!";
-        } else {
-            $_SESSION['error'] = "Error al eliminar evento: " . $stmt->error;
-        }
-        $stmt->close();
-
-        header("Location: Calendario.html");
-        exit();
-    }
-
-    private function sanitize($data)
-    {
-        return htmlspecialchars(stripslashes(trim($data)));
-    }
-
-    public function __destruct()
-    {
-        $this->conn->close();
+        $sql = "DELETE FROM events WHERE id_evento = :id_evento";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_evento', $id_evento);
+        return $stmt->execute();
     }
 }
+
+// Manejo de la solicitud GET y POST del formulario
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $controller = new EventController();
+
+    if (isset($_GET["action"])) {
+        if ($_GET["action"] == "list") {
+            echo json_encode($controller->getEvents());
+        } elseif ($_GET["action"] == "view" && isset($_GET["id_evento"])) {
+            echo json_encode($controller->getEventById($_GET["id_evento"]));
+        }
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $controller = new EventController();
+
+    if (isset($_POST["action"])) {
+        if ($_POST["action"] == "add") {
+            $nombre_evento = $_POST["nombre_evento"];
+            $fecha = $_POST["fecha"];
+            $hora = $_POST["hora"];
+            $ubicacion = $_POST["ubicacion"];
+            $descripcion = $_POST["descripcion"];
+            $categoria = $_POST["categoria"];
+            $total_tickets = $_POST["total_tickets"];
+            $precio = $_POST["precio"];
+            $organizador = $_POST["organizador"];
+            $imagen = file_get_contents($_FILES["imagen"]["tmp_name"]);
+
+            if ($controller->createEvent($nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $imagen)) {
+                echo "Evento creado exitosamente.";
+            } else {
+                echo "Error al crear el evento.";
+            }
+        } elseif ($_POST["action"] == "update") {
+            $id_evento = $_POST["id_evento"];
+            $nombre_evento = $_POST["nombre_evento"];
+            $fecha = $_POST["fecha"];
+            $hora = $_POST["hora"];
+            $ubicacion = $_POST["ubicacion"];
+            $descripcion = $_POST["descripcion"];
+            $categoria = $_POST["categoria"];
+            $total_tickets = $_POST["total_tickets"];
+            $precio = $_POST["precio"];
+            $organizador = $_POST["organizador"];
+            $estado_evento = $_POST["estado_evento"];
+            $imagen = file_get_contents($_FILES["imagen"]["tmp_name"]);
+
+            if ($controller->updateEvent($id_evento, $nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $estado_evento, $imagen)) {
+                echo "Evento actualizado exitosamente.";
+            } else {
+                echo "Error al actualizar el evento.";
+            }
+        } elseif ($_POST["action"] == "delete") {
+            $id_evento = $_POST["id_evento"];
+            if ($controller->deleteEvent($id_evento)) {
+                echo "Evento eliminado exitosamente.";
+            } else {
+                echo "Error al eliminar el evento.";
+            }
+        }
+    }
+}
+?>

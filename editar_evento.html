@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Evento</title>
+</head>
+<body>
+  <h1>Editar Evento</h1>
+
+  <form action="EventController.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="update" />
+    <input type="hidden" name="id_evento" value="ID_DEL_EVENTO_AQUI" />
+
+    <label>Nombre:</label>
+    <input type="text" name="nombre_evento" required /><br />
+
+    <label>Fecha:</label>
+    <input type="date" name="fecha" required /><br />
+
+    <label>Hora:</label>
+    <input type="time" name="hora" required /><br />
+
+    <label>Ubicación:</label>
+    <input type="text" name="ubicacion" required /><br />
+
+    <label>Descripción:</label>
+    <textarea name="descripcion" required></textarea><br />
+
+    <label>Categoría:</label>
+    <select name="categoria" required>
+      <option value="Competiciones">Competiciones</option>
+      <option value="Concentraciones">Concentraciones</option>
+      <option value="Ferias">Ferias</option>
+      <option value="Eventos">Eventos</option>
+      <option value="Tuning">Tuning</option>
+      <option value="Otros">Otros</option>
+    </select><br />
+
+    <label>Total tickets:</label>
+    <input type="number" name="total_tickets" min="1" required /><br />
+
+    <label>Precio (€):</label>
+    <input type="number" name="precio" step="0.01" /><br />
+
+    <label>Organizador:</label>
+    <input type="text" name="organizador" /><br />
+
+    <label>Estado:</label>
+    <select name="estado_evento">
+      <option value="En planificación">En planificación</option>
+      <option value="Confirmado">Confirmado</option>
+      <option value="Cancelado">Cancelado</option>
+    </select><br />
+
+    <label>Imagen:</label>
+    <input type="file" name="imagen" accept="image/*" /><br /><br />
+
+    <button type="submit">Actualizar Evento</button>
+  </form>
+</body>
+</html>
