@@ -136,7 +136,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $action = $_POST["action"] ?? "";
 
     // Validación mínima para datos comunes
-    function validarDatosEvento(array $data, $isUpdate = false) {
+    function validarDatosEvento(array $data, $isUpdate = false)
+    {
         $camposRequeridos = ["nombre_evento", "fecha", "hora", "ubicacion", "descripcion", "categoria", "total_tickets", "precio", "organizador"];
         if ($isUpdate) {
             $camposRequeridos[] = "id_evento";
@@ -244,4 +245,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 http_response_code(405);
 echo json_encode(["error" => "Método no permitido"]);
 exit;
-?>
