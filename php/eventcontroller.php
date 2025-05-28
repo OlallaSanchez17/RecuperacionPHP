@@ -49,51 +49,84 @@ class eventcontroller
     }
 
     // Obtener un evento por ID
-    public function getEventById($id_evento)
-    {
-        $sql = "SELECT * FROM events WHERE id_evento = :id_evento";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id_evento', $id_evento, PDO::PARAM_INT);
-        $stmt->execute();
+public function getEventById($id_evento)
+{
+    $sql = "SELECT * FROM events WHERE id_evento = :id_evento";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':id_evento', $id_evento, PDO::PARAM_INT);
+    $stmt->execute();
 
-        if ($stmt->rowCount() === 0) {
-            return null;
-        }
+    $evento = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$evento) {
+        http_response_code(404);
+        return null;
     }
+
+    return $evento; 
+}
+
 
     // Actualizar un evento existente
-    public function updateEvent($id_evento, $nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $estado_evento, $imagen = null)
-    {
-        // Si $imagen es null, no actualizamos la imagen
-        if ($imagen === null) {
-            $sql = "UPDATE events SET nombre_evento = :nombre_evento, fecha = :fecha, hora = :hora, ubicacion = :ubicacion, descripcion = :descripcion, 
-                    categoria = :categoria, total_tickets = :total_tickets, precio = :precio, organizador = :organizador, estado_evento = :estado_evento
-                    WHERE id_evento = :id_evento";
-            $stmt = $this->conn->prepare($sql);
-        } else {
-            $sql = "UPDATE events SET nombre_evento = :nombre_evento, fecha = :fecha, hora = :hora, ubicacion = :ubicacion, descripcion = :descripcion, 
-                    categoria = :categoria, total_tickets = :total_tickets, precio = :precio, organizador = :organizador, estado_evento = :estado_evento, imagen = :imagen
-                    WHERE id_evento = :id_evento";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
-        }
-
-        $stmt->bindParam(':id_evento', $id_evento, PDO::PARAM_INT);
-        $stmt->bindParam(':nombre_evento', $nombre_evento);
-        $stmt->bindParam(':fecha', $fecha);
-        $stmt->bindParam(':hora', $hora);
-        $stmt->bindParam(':ubicacion', $ubicacion);
-        $stmt->bindParam(':descripcion', $descripcion);
-        $stmt->bindParam(':categoria', $categoria);
-        $stmt->bindParam(':total_tickets', $total_tickets, PDO::PARAM_INT);
-        $stmt->bindParam(':precio', $precio);
-        $stmt->bindParam(':organizador', $organizador);
-        $stmt->bindParam(':estado_evento', $estado_evento);
-
-        return $stmt->execute();
+public function updateEvent($id_evento, $nombre_evento, $fecha, $hora, $ubicacion, $descripcion, $categoria, $total_tickets, $precio, $organizador, $estado_evento, $imagen = null)
+{
+    if ($imagen === null) {
+        $sql = "UPDATE events SET 
+                    nombre_evento = :nombre_evento, 
+                    fecha = :fecha, 
+                    hora = :hora, 
+                    ubicacion = :ubicacion, 
+                    descripcion = :descripcion, 
+                    categoria = :categoria, 
+                    total_tickets = :total_tickets, 
+                    precio = :precio, 
+                    organizador = :organizador, 
+                    estado_evento = :estado_evento
+                WHERE id_evento = :id_evento";
+        $stmt = $this->conn->prepare($sql);
+    } else {
+        $sql = "UPDATE events SET 
+                    nombre_evento = :nombre_evento, 
+                    fecha = :fecha, 
+                    hora = :hora, 
+                    ubicacion = :ubicacion, 
+                    descripcion = :descripcion, 
+                    categoria = :categoria, 
+                    total_tickets = :total_tickets, 
+                    precio = :precio, 
+                    organizador = :organizador, 
+                    estado_evento = :estado_evento, 
+                    imagen = :imagen
+                WHERE id_evento = :id_evento";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':imagen', $imagen, PDO::PARAM_LOB);
     }
+
+    $stmt->bindValue(':id_evento', $id_evento, PDO::PARAM_INT);
+    $stmt->bindValue(':nombre_evento', $nombre_evento, PDO::PARAM_STR);
+    $stmt->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+    $stmt->bindValue(':hora', $hora, PDO::PARAM_STR);
+    $stmt->bindValue(':ubicacion', $ubicacion, PDO::PARAM_STR);
+    $stmt->bindValue(':descripcion', $descripcion, PDO::PARAM_STR);
+    $stmt->bindValue(':categoria', $categoria, PDO::PARAM_STR);
+    $stmt->bindValue(':total_tickets', $total_tickets, PDO::PARAM_INT);
+
+    if ($precio === null) {
+        $stmt->bindValue(':precio', null, PDO::PARAM_NULL);
+    } else {
+        $stmt->bindValue(':precio', $precio, PDO::PARAM_STR);
+    }
+
+    $stmt->bindValue(':organizador', $organizador, PDO::PARAM_STR);
+    $stmt->bindValue(':estado_evento', $estado_evento, PDO::PARAM_STR);
+
+    $resultado = $stmt->execute();
+
+    return $resultado && $stmt->rowCount() > 0;
+}
+
+
+    
 
     // Eliminar un evento por ID
     public function deleteEvent($id_evento)
