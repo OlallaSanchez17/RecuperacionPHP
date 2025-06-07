@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Evento de Coches</title>
+    <link rel="stylesheet" href="../css/CrearEvento.css">
+</head>
+<body>
+    <h1>Editar Evento de Coches</h1>
+    <form action="/controlador/eventcontroller.php" method="POST">
+        <input type="hidden" name="accion" value="editar">
+        <input type="hidden" name="id" value="1">
+
+        <label>Nombre del Evento:</label>
+        <input type="text" name="nombre" value="Concentración Clásicos" required>
+        
+        <label>Fecha:</label>
+        <input type="date" name="fecha" value="2025-07-20" required>
+        
+        <label>Ubicación:</label>
+        <input type="text" name="ubicacion" value="Circuito Montmeló" required>
+        
+        <label>Descripción:</label>
+        <textarea name="descripcion" required>Evento para amantes de coches clásicos y deportivos.</textarea>
+        
+        <button type="submit">Guardar Cambios</button>
+    </form>
+</body>
+</html>

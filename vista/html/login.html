@@ -7,24 +7,16 @@
     <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/login.css">
 </head>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendario de Eventos 2025</title>
-  <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/comunidad.css">
-</head>
 
 <body>
     <div class="contenedor">
         <div class="logo-container" style="text-align: center; margin-top: 20px;">
-            <img src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
+            <img src="../imgs/logocoches2.png" alt="SP Motors Logo" style="max-width: 300px;">
         </div>
 
         <h2>Iniciar Sesión</h2>
 
-        <form action="../DAW1-ProyectoTransversal/php/usercontroller.php" method="post">
+        <form action="/controlador/usercontroller.php" method="post">
 
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required placeholder="@">
@@ -35,10 +27,8 @@
             <button type="submit" name="login">Enviar</button>
 
             <div id="register">
-
-                <a href="../DAW1-ProyectoTransversal/registro.html">Regístrate usuario</a>
-                <a href="../DAW1-ProyectoTransversal/register_admin.php">/ admin</a>
-
+                <a href="../html/register_user.html">Regístrate usuario</a>
+                <a href="../html/register_admin.html">/ admin</a>
             </div>
 
 
