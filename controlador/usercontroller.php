@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-class usercontroller
+class UserController
 {
     private $conn;
 
