@@ -15,17 +15,17 @@ session_start();
     <p>Email: <?php echo $_SESSION['email']; ?></p>
     <p>Rol: <?php echo $_SESSION['rol']; ?></p>
 
-    <form action="php/usercontroller.php" method="POST">
+    <form action= "../usercontroller.php" method="POST">
         <button type="submit" name="logout" class="button">Cerrar Sesión</button>
     </form>
 
-    <a href="updateUserData.html">Actualizar Datos</a><br>
-    <a href="updatePassword.html">Actualizar Contraseña</a>
+    <a href="/RecuperacionPHP/view/html/updateUserData.html">Actualizar Datos</a><br>
+    <a href="/RecuperacionPHP/view/html/updateUserPassword.html">Actualizar Contraseña</a>
 
 
 
     <!-- Redirige a la página de confirmación -->
-    <form action="confirm_delete.php" method="GET">
+    <form action="../confirm_delete.php" method="GET">
         <button type="submit" class="button">Eliminar Cuenta</button>
     </form>
 </body>

@@ -4,7 +4,7 @@ session_start();
 // Conexión a la base de datos para obtener la imagen
 $servername = "localhost";
 $username = "root";
-$password = "1234";
+$password = "";
 $dbname = "spmotors";
 
 try {
@@ -43,13 +43,13 @@ try {
     <?php else: ?>
         <p>No hay imagen de perfil disponible.</p>
     <?php endif; ?>
-    <form action="php/usercontroller.php" method="POST">
+    <form action="../usercontroller.php" method="POST">
         <button type="submit" name="logout" id="logout" class="button">Cerrar Sesión</button>
     </form>
-    <form action="php/usercontroller.php" method="POST">
+    <form action="../usercontroller.php" method="POST">
         <button type="submit" name="delete_account" id="logout" class="button">Eliminar Cuenta</button>
     </form>
-    <form action="php/eventcontroller.php" method="POST">
+    <form action="../eventcontroller.php" method="POST">
         <button type="submit" name="delete_account" id="logout" class="button">Adminisitrar eventos</button>
     </form>
 </body>

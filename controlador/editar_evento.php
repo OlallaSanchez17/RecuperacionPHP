@@ -95,7 +95,7 @@ if (!$evento) {
 </head>
 <body>
     <h1>Editar Evento de Coche</h1>
-    <form action="php/eventcontroller.php" method="post">
+    <form action=" ../eventcontroller.php" method="post">
         <input type="hidden" name="accion" value="actualizar">
         <input type="hidden" name="id" value="<?= htmlspecialchars($evento['id']) ?>">
 
@@ -112,7 +112,7 @@ if (!$evento) {
         <textarea name="descripcion" id="descripcion" rows="4"><?= htmlspecialchars($evento['descripcion']) ?></textarea>
 
         <button type="submit">Guardar Cambios</button>
-        <a href="verevento.php">Cancelar</a>
+        <a href=" ../verevento.php">Cancelar</a>
     </form>
 </body>
 </html>

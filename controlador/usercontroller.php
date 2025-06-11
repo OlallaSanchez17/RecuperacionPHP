@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST["login"])) {
-        echo "<p>Loggin button is clicked. </p>";
+      //  echo "<p>Loggin button is clicked. </p>";
         $user->login();
     }
 
@@ -153,8 +153,6 @@ class UserController
     // Método para iniciar sesión
     public function login(): void
     {
-        session_start();
-
         $email = trim($_POST["email"] ?? '');
         $password = $_POST["password"] ?? '';
 
@@ -172,21 +170,32 @@ class UserController
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$user || !password_verify($password, $user["password"])) {
+     if (!$user || !password_verify($password, $user["password"])) {
                 $_SESSION['error_message'] = "Correo o contraseña incorrectos.";
                 header("Location: ../error.php");
                 exit;
             }
 
             // Login exitoso
+        if (isset($user) && is_array($user)) {
             $_SESSION["logged"] = true;
-            $_SESSION["email"] = $user["email"];
-            $_SESSION["username"] = $user["usuario"];
-            $_SESSION["rol"] = $user["rol"];
+            $_SESSION["email"] = $user["email"] ?? null;
+            $_SESSION["username"] = $user["usuario"] ?? null;
+            $_SESSION["rol"] = $user["rol"] ?? null;
             $_SESSION["profile_image"] = $user["foto"] ?? null;
 
+        } else {
+            // Manejo de error si $user no está definido o no es un arreglo
+            $_SESSION["logged"] = false;
+            // Puedes agregar un log o redirigir al login
+        }
+
+                 //   header(header: "Location: ../profileuser.php");
+
+
+
             // Redirigir según el rol
-            $redirect = ($user["rol"] === "admin") ? "../profileadmin.php" : "../profileuser.php";
+            $redirect = ($user["rol"] === "admin") ? "../profileadmin.php" : " ../profileuser.php";
             header("Location: $redirect");
             exit;
         } catch (PDOException $e) {
@@ -194,6 +203,7 @@ class UserController
             error_log("Login error: " . $e->getMessage());
             header("Location: ../error.php");
             exit;
+
         }
     }
 
@@ -217,6 +227,7 @@ class UserController
             $_SESSION['error_message'] = "No hay sesión activa para eliminar la cuenta.";
             header("Location: ../error.php");
             exit;
+
         }
 
         $email = $_SESSION['email'];
@@ -243,16 +254,21 @@ class UserController
                     $_SESSION['error_message'] = "Error al intentar eliminar la cuenta.";
                     header("Location: ../error.php");
                     exit;
+
                 }
             } else {
                 $_SESSION['error_message'] = "Usuario no encontrado.";
+               
+               
                 header("Location: ../error.php");
                 exit;
+
             }
         } catch (PDOException $e) {
             $_SESSION['error_message'] = "Error en la base de datos: " . $e->getMessage();
             header("Location: ../error.php");
             exit;
+
         }
     }
 
@@ -265,6 +281,7 @@ class UserController
             $_SESSION['error_message'] = "Debes iniciar sesión para actualizar tus datos.";
             header("Location: ../error.php");
             exit;
+
         }
 
         $nuevoUsuario = trim($_POST["new_username"] ?? '');
@@ -276,12 +293,14 @@ class UserController
             $_SESSION['error_message'] = "Todos los campos son obligatorios.";
             header("Location: ../error.php");
             exit;
+
         }
 
         if (!filter_var($nuevoEmail, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error_message'] = "El correo electrónico no es válido.";
             header("Location: ../error.php");
             exit;
+
         }
 
         try {
@@ -299,6 +318,7 @@ class UserController
 
             header("Location: ../profileuser.php");
             exit;
+
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 $_SESSION['error_message'] = "El nombre de usuario o correo ya está en uso.";
@@ -308,6 +328,7 @@ class UserController
 
             header("Location: ../error.php");
             exit;
+
         }
     }
 
@@ -320,6 +341,7 @@ class UserController
             $_SESSION['error_message'] = "Debes iniciar sesión para cambiar tu contraseña.";
             header("Location: ../error.php");
             exit;
+
         }
 
         $usuario = $_SESSION['username'];
@@ -332,12 +354,14 @@ class UserController
             $_SESSION['error_message'] = "Todos los campos son obligatorios.";
             header("Location: ../error.php");
             exit;
+
         }
 
         if ($nuevaPassword !== $confirmarPassword) {
             $_SESSION['error_message'] = "Las nuevas contraseñas no coinciden.";
             header("Location: ../error.php");
             exit;
+
         }
 
         try {
@@ -351,6 +375,7 @@ class UserController
                 $_SESSION['error_message'] = "La contraseña actual es incorrecta.";
                 header("Location: ../error.php");
                 exit;
+
             }
 
             // Actualizar la contraseña
@@ -367,6 +392,7 @@ class UserController
             $_SESSION['error_message'] = "Error al actualizar la contraseña: " . $e->getMessage();
             header("Location: ../error.php");
             exit;
+
         }
     }
 }

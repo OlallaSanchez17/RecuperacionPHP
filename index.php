@@ -11,7 +11,7 @@ $rol = $_SESSION['rol'] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SP MOTORS - Concesionario de Vehículos</title>
-    <link rel="stylesheet" href="../DAW1-ProyectoTransversal/css/index.css">
+    <link rel="stylesheet" href="../RecuperacionPHP/vista/css/index.css">
 </head>
 
 <body>
@@ -25,22 +25,24 @@ $rol = $_SESSION['rol'] ?? null;
 
                             <button class="menu-btn">≡</button>
                             <div class="dropdown-content">
-                                <a href="../DAW1-ProyectoTransversal/Calendario.html">Calendario de eventos</a>
-                                <a href="../DAW1-ProyectoTransversal/Coches.html">Coches en venta</a>
-                                <a href="../DAW1-ProyectoTransversal/Comunidad.html">Comunidad</a>
-                                <a href="../DAW1-ProyectoTransversal/Noticias.html">Noticias</a>
+                                <a href="../RecuperacionPHP/vista/html/Calendario.html">Calendario de eventos</a>
+                                <a href="../RecuperacionPHP/vista/html/Comunidad.html">Comunidad</a>
+                                <a href="../RecuperacionPHP/vista/html/Noticias.html">Noticias</a>
+                                <a href="../RecuperacionPHP/vista/html/tickets.html">Venta de tickets</a>
+                                <a href="../RecuperacionPHP/vista/html/CrearEvento.html">Crear evento</a>
+                                <a href="../RecuperacionPHP/vista/html/editar_evento.html">Editar Evento</a>  
                             </div>
                     </div>
                 <?php endif; ?>
 
 
                 <?php if (!$usuario_logueado): ?>
-                    <a href="../DAW1-ProyectoTransversal/login.html" class="login-btn">Iniciar Sesión</a>
+                    <a href="../login.html" class="login-btn">Iniciar Sesión</a>
                 <?php else: ?>
                     <?php if ($rol === 'admin'): ?>
-                        <a href="../DAW1-ProyectoTransversal/profileadmin.php" class="login-btn">Mi Perfil</a>
+                        <a href="../profileadmin.php" class="login-btn">Mi Perfil</a>
                     <?php else: ?>
-                        <a href="../DAW1-ProyectoTransversal/profileuser.php" class="login-btn">Mi Perfil</a>
+                        <a href="../profileuser.php" class="login-btn">Mi Perfil</a>
                     <?php endif; ?>
                 <?php endif; ?>
                 </div>
@@ -48,7 +50,7 @@ $rol = $_SESSION['rol'] ?? null;
         </nav>
 
         <div class="hero-content">
-            <img class="main-logo" src="../DAW1-ProyectoTransversal/imgs/logocoches2.png" alt="Logo SP MOTORS">
+            <img class="main-logo" src="../RecuperacionPHP/vista/imgs/logocoches2.png" alt="Logo SP MOTORS">
             <h1 class="logo-text">SP MOTORS</h1>
             <p class="slogan">Excelencia automotriz con más de 15 años de experiencia en el mercado de vehículos premium</p>
         </div>

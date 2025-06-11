@@ -130,7 +130,7 @@
             <button type="submit" name="update_password">Actualizar Contraseña</button>
         </form>
 
-        <a href="<?php echo ($_SESSION['rol'] === 'admin') ? 'profileadmin.php' : 'profileuser.php'; ?>"
+        <a href="<?php echo ($_SESSION['rol'] === 'admin') ? '../profileadmin.php' : '../profileuser.php'; ?>"
             class="back-link">Volver al perfil</a>
     </div>
 </body>

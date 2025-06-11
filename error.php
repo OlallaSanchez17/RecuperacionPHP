@@ -38,7 +38,7 @@ session_start();
             unset($_SESSION['error_message']); // Limpiar el mensaje después de mostrarlo
             ?>
         </p>
-        <p><a href="index.php">Volver al registro</a></p>
+        <p><a href=" ../index.php">Volver al registro</a></p>
     </div>
 </body>
 </html>

@@ -20,20 +20,13 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Eventos de Coches</title>
+    <link rel="stylesheet" href="../RecuperacionPHP/vista/css/VerEvento.css">
+
 </head>
 <body>
     <h1>Lista de Eventos</h1>
     <a href="/RecuperacionPHP/view/html/CreatEvento.html">Crear nuevo evento</a>
-        <button onclick="window.location.href='/index.php'" style="
-        background-color: #FFA500;
-        color: #000;
-        border: none;
-        padding: 8px 16px;
-        font-weight: bold;
-        margin-left: 20px;
-        cursor: pointer;
-        border-radius: 3px;
-    ">Página Principal</button>
+<button onclick="window.location.href='../RecuperacionPHP/index.php'">Página Principal</button>
     <table>
         <tr>
             <th>Nombre</th>
@@ -49,12 +42,12 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($evento['ubicacion']) ?></td>
             <td><?= htmlspecialchars($evento['descripcion']) ?></td>
             <td>
-                <form action="/eventcontroller.php" method="post" onsubmit="return confirm('¿Eliminar este evento?')">
+                <form action=" ../eventcontroller.php" method="post" onsubmit="return confirm('¿Eliminar este evento?')">
                     <input type="hidden" name="accion" value="eliminar">
                     <input type="hidden" name="id" value="<?= $evento['id'] ?>">
                     <button type="submit">Eliminar</button>
                 </form>
-                <form action="/editar_evento.php" method="get">
+                <form action=" ../editar_evento.php" method="get">
                     <input type="hidden" name="id" value="<?= $evento['id'] ?>">
                     <button type="submit">Editar</button>
                 </form>
