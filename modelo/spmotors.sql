@@ -1,6 +1,4 @@
-CREATE DATABASE spmotors;
-USE spmotors;
-
+use spmotors;
 CREATE TABLE eventos_coches (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -8,3 +6,4 @@ CREATE TABLE eventos_coches (
     ubicacion VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL
 );
+select*from eventos_coches;
