@@ -47,7 +47,7 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="hidden" name="id" value="<?= $evento['id'] ?>">
                     <button type="submit">Eliminar</button>
                 </form>
-                <form action=" ../editar_evento.php" method="get">
+                <form action=" ../RecuperacionPHP/controlador/editar_evento.php" method="get">
                     <input type="hidden" name="id" value="<?= $evento['id'] ?>">
                     <button type="submit">Editar</button>
                 </form>

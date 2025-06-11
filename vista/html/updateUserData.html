@@ -1,5 +1,23 @@
-<form method="POST" action="/RecuperacionPHP/controlador/usercontroller.php">
-    <input type="text" name="new_username" placeholder="Nuevo nombre de usuario" required>
-    <input type="email" name="new_email" placeholder="Nuevo correo electrónico" required>
-    <button type="submit" name="update_datauser">Actualizar datos</button>
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Datos</title>
+    <link rel="stylesheet" href="../css/UpdateUserData.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Actualizar Datos de Usuario</h1>
+
+        <form method="POST" action="../../controlador/usercontroller.php">
+            <input type="text" name="new_username" placeholder="Nuevo nombre de usuario" required>
+            <input type="email" name="new_email" placeholder="Nuevo correo electrónico" required>
+            <button type="submit" name="update_datauser">Actualizar datos</button>
+        </form>
+
+        <a href="perfil.php">← Volver al perfil</a>
+    </div>
+
+</body>
+</html>

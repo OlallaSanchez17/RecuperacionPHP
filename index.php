@@ -37,12 +37,12 @@ $rol = $_SESSION['rol'] ?? null;
 
 
                 <?php if (!$usuario_logueado): ?>
-                    <a href="../login.html" class="login-btn">Iniciar Sesión</a>
+                    <a href="../RecuperacionPHP/vista/html/login.html" class="login-btn">Iniciar Sesión</a>
                 <?php else: ?>
                     <?php if ($rol === 'admin'): ?>
                         <a href="../profileadmin.php" class="login-btn">Mi Perfil</a>
                     <?php else: ?>
-                        <a href="../profileuser.php" class="login-btn">Mi Perfil</a>
+                        <a href=" ../RecuperacionPHP/profileuser.php" class="login-btn">Mi Perfil</a>
                     <?php endif; ?>
                 <?php endif; ?>
                 </div>
