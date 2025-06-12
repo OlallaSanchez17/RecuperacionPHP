@@ -35,7 +35,7 @@ session_start();
         <p>
             <?php
             echo $_SESSION['error_message'] ?? "Error desconocido.";
-            unset($_SESSION['error_message']); // Limpiar el mensaje después de mostrarlo
+            unset($_SESSION['error_message']); 
             ?>
         </p>
         <p><a href="../RecuperacionPHP/index.php">Volver al registro</a></p>

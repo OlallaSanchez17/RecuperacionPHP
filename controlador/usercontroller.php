@@ -1,8 +1,9 @@
 <?php
+
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user = new usercontroller();
+    $user = new UserController();
 
     if (isset($_POST["register_user"])) {
         echo "<p>Register user button is clicked. </p>";
@@ -42,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+
 class UserController
 {
     private $conn;
@@ -71,6 +73,7 @@ class UserController
             id INT AUTO_INCREMENT PRIMARY KEY,
             usuario VARCHAR(50) NOT NULL UNIQUE,
             email VARCHAR(100) NOT NULL UNIQUE,
+            quantity VARCHAR (11) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             rol VARCHAR(20) NOT NULL,
             foto LONGBLOB
@@ -90,11 +93,12 @@ class UserController
 
         $usuario = trim($_POST["username"] ?? '');
         $email = trim($_POST["email"] ?? '');
+        $quantity = trim ($_POST ["quantity"] ?? '');
         $passwordRaw = $_POST["password"] ?? '';
         $foto = null;
 
         // Validaciones básicas
-        if (empty($usuario) || empty($email) || empty($passwordRaw)) {
+        if (empty($usuario) || empty($email) || empty($passwordRaw)){
             $_SESSION['error_message'] = "Todos los campos son obligatorios.";
             header("Location: ../error.php");
             exit;
@@ -114,11 +118,12 @@ class UserController
         }
 
         try {
-            $stmt = $this->conn->prepare("INSERT INTO users (usuario, email, password, rol, foto)
-                                      VALUES (:usuario, :email, :password, :rol, :foto)");
+            $stmt = $this->conn->prepare("INSERT INTO users (usuario, email, quantity, password, rol, foto)
+                                      VALUES (:usuario, :email, :quantity, :password, :rol, :foto)");
 
             $stmt->bindParam(":usuario", $usuario);
             $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":quantity",  $quantity);
             $stmt->bindParam(":password", $password);
             $stmt->bindParam(":rol", $rol);
             $stmt->bindParam(":foto", $foto, PDO::PARAM_LOB);
@@ -128,6 +133,7 @@ class UserController
             $_SESSION['logged'] = true;
             $_SESSION['username'] = $usuario;
             $_SESSION['email'] = $email;
+            $_SESSION['quantity'] = $quantity;
             $_SESSION['rol'] = $rol;
 
             // Redirigir según el rol
@@ -136,7 +142,7 @@ class UserController
             exit;
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
-                $_SESSION['error_message'] = "El nombre de usuario o correo ya está registrado.";
+                $_SESSION['error_message'] = "El nombre de usuario, correo o quantity de telefono ya está registrado.";
             } else {
                 $_SESSION['error_message'] = "Error al registrar: " . $e->getMessage();
             }
@@ -145,10 +151,6 @@ class UserController
             exit;
         }
     }
-
-
-
-
 
     // Método para iniciar sesión
     public function login(): void
@@ -180,6 +182,7 @@ class UserController
         if (isset($user) && is_array($user)) {
             $_SESSION["logged"] = true;
             $_SESSION["email"] = $user["email"] ?? null;
+            $_SESSION["quantity"] = $user["quantity"] ?? null;
             $_SESSION["username"] = $user["usuario"] ?? null;
             $_SESSION["rol"] = $user["rol"] ?? null;
             $_SESSION["profile_image"] = $user["foto"] ?? null;
@@ -206,8 +209,6 @@ class UserController
 
         }
     }
-
-
 
 
     // Método para cerrar sesión

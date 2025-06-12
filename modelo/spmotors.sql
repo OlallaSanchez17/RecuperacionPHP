@@ -6,4 +6,5 @@ CREATE TABLE eventos_coches (
     ubicacion VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL
 );
+
 select*from eventos_coches;

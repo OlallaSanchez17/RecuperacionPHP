@@ -76,6 +76,7 @@ p {
     <a href="index.php">Home</a>
     <h1>Bienvenido, <?php echo $_SESSION['username']; ?>!</h1>
     <p>Email: <?php echo $_SESSION['email']; ?></p>
+    <p>Numero Telefono: <?php echo $_SESSION['quantity']; ?></p>
     <p>Rol: <?php echo $_SESSION['rol']; ?></p>
 
     <form action= "../RecuperacionPHP/controlador/usercontroller.php" method="POST">

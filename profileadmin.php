@@ -35,6 +35,7 @@ try {
 <body>
     <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
     <p>Email: <?php echo htmlspecialchars($_SESSION['email']); ?></p>
+    <p>Numero Telefono: <?php echo htmlspecialchars(string: $_SESSION['quantity']); ?></p>
     <p>Rol: <?php echo htmlspecialchars($_SESSION['rol']); ?></p>
 
     <?php if ($foto): ?>
